@@ -1,0 +1,14 @@
+### 发送聊天记录的请求
+###
+POST http://localhost:8088/GPT4/send
+Content-Type: application/json
+
+{
+  "time": "2023-01-01 09:12:00",
+  "msg": "你是GPT几",
+  "uid": "User"
+}
+### 所有聊天记录
+GET http://localhost:8088/chat3/messages
+
+Content-Type: application/json

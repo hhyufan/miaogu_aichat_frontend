@@ -1,0 +1,45 @@
+spring:
+  ai:
+    openai:
+      base-url: https://api.openai.com/
+      api-key: sk-xxx
+      chat:
+        #指定某一个API配置(覆盖全局配置)
+        base-url: https://api.chatanywhere.tech
+        api-key: sk-3xv6gSr2JY2Z3pPsaoA0tFNWCT1OjQhWlLDv53SiNDLV5IXC
+        options:
+          model: gpt-3.5-turbo # 模型默认配置
+  application:
+    name: miaogu_aichat
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///miaogu_aichat?severTimezone=UTC
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 6000
+  graphql:
+    cors:
+      allowed-origins: http://localhost:5175
+
+server:
+  port: 8088
+
+pagehelper:
+  helper-dialect: mysql
+  support-methods-arguments: true
+  reasonable: true
+
+
+#打印sql语句到控台
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    type-aliases-package: com.miaogu.entity
+debug: true
