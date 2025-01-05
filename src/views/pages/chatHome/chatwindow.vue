@@ -37,9 +37,26 @@
             v-model="inputMsg"
             @keyup.enter="sendText"
         />
-        <div class="send boxinput" @click="sendText">
-          <img src="@/assets/img/OIP.png" alt="" />
+        <div class="send" @click="sendText">
+          <div class="svg-wrapper-1">
+            <div class="svg-wrapper">
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+              >
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path
+                    fill="currentColor"
+                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <span>Send</span>
         </div>
+
       </div>
     </div>
   </div>
@@ -390,14 +407,60 @@ export default {
         }
       }
 
+
       .send {
         background-color: rgb(153, 125, 236);
-        border: 0;
-        transition: 0.3s;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        overflow: hidden;
+        font-size: 10px;
+        color: #d1dc71;
         box-shadow: 0 0 5px 0 rgb(111, 81, 209);
+        transition: 0.3s;
+        cursor: pointer;
+
+        span {
+          display: block;
+          margin-left: 0.3em;
+          transition: 0.3s;
+        }
+
+        svg {
+          display: block;
+          transform-origin: center center;
+          transition: transform 0.3s ease-in-out;
+        }
 
         &:hover {
           box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+          .svg-wrapper {
+            animation: fly-1 0.6s ease-in-out infinite alternate;
+          }
+
+          svg {
+            transform: translateX(1.2em) rotate(45deg) scale(1.1);
+          }
+
+          span {
+            transform: translateX(5em);
+          }
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+      @keyframes fly-1 {
+        from {
+          transform: translateY(0.1em);
+        }
+
+        to {
+          transform: translateY(-0.1em);
         }
       }
     }

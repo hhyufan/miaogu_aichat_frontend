@@ -6,31 +6,31 @@
         <div id="registerForm" ref="registerBox" :class="['register-box', { hidden: isRegisterHidden }]">
           <h1>register</h1>
           <label class="register_input">
-            <input name="username" type="text" placeholder="用户名">
+            <input name="username" type="text"  v-model="registerUsername" placeholder="用户名">
           </label>
           <label>
-            <input name="email" type="email" placeholder="邮箱" required>
+            <input name="email" type="email" v-model="email" placeholder="邮箱" required>
           </label>
           <label>
-            <input name="password" type="password" placeholder="密码" onpaste="return false;" required>
+            <input name="password" type="password" v-model="registerPassword" placeholder="密码" onpaste="return false;">
           </label>
           <label>
-            <input name="confirmPassword" type="password" placeholder="确认密码" onpaste="return false;" required>
+            <input name="confirmPassword" type="password" v-model="confirmPassword" placeholder="确认密码" onpaste="return false;">
           </label>
-          <div id="registerError" class="error-message"></div>
-          <button type="submit">注册</button>
+          <div id="registerError" class="error-message">{{registerError}}</div>
+          <button @click="onRegister">注册</button>
         </div>
         <!-- 登录 -->
         <div id="loginForm" ref="loginBox" :class="['login-box', { hidden: !isRegisterHidden }]">
           <h1>login</h1>
           <label class="login_input">
-            <input name="username" type="text" placeholder="用户名" required>
+            <input name="username" type="text" placeholder="用户名" v-model="loginUsername">
           </label>
           <label>
-            <input name="password" type="password" placeholder="密码" onpaste="return false;" required>
+            <input name="password" type="password" placeholder="密码" v-model="loginPassword" onpaste="return false;">
           </label>
-          <div id="loginError" class="error-message"></div>
-          <button type="submit">登录</button>
+          <div id="loginError" class="error-message">{{loginError}}</div>
+          <button type="submit" @click="onLogin">登录</button>
         </div>
       </div>
       <div class="con-box left">
@@ -38,14 +38,14 @@
         <h2>请<span class="span_left">注册</span></h2>
         <img src="@/assets/img/01.jpg" alt="注册">
         <p>已有账号</p>
-        <button id="login" @click="onLogin">去登录</button>
+        <button id="login" @click="ToLogin">去登录</button>
       </div>
       <div class="con-box right">
         <h2>欢迎来到<span class="span_right">喵咕平台</span></h2>
         <h2>请<span class="span_right">登录</span></h2>
         <img src="@/assets/img/02.jpg" alt="登录">
         <p>没有账号？</p>
-        <button id="register" @click="onRegister">去注册</button>
+        <button id="register" @click="ToRegister">去注册</button>
       </div>
       <div class="square">
         <ul>
@@ -71,6 +71,11 @@
 
 <script setup>
 import {ref} from 'vue';
+import { useRouter } from 'vue-router';
+import {register, login} from '@/api/getData'
+const router = useRouter();
+
+// 样式表绑定
 const changedStyle = ref("changed-styleA");
 const formBox = ref("form-box");
 const registerBox = ref("register-box");
@@ -79,8 +84,63 @@ const loginBox = ref("login-box");
 // 控制注册表单的可见性
 const isRegisterHidden = ref(true);
 
+// 表单数据绑定
+const loginUsername = ref("");
+const loginPassword = ref("");
+const registerUsername = ref("");
+const registerPassword = ref("");
+const email = ref("");
+const confirmPassword = ref("");
+
+// 错误提示绑定
+const loginError = ref("");
+const registerError = ref("");
+
+
+
+const onRegister =  () => {
+  console.log(registerPassword.value)
+  console.log(confirmPassword.value)
+  if (registerPassword.value !== confirmPassword.value) {
+    registerError.value = "密码不一致！"
+    return;
+  }
+  const registerData = register(registerUsername.value, registerPassword.value, email.value)
+  console.log(registerData)
+  registerData.then(response => {
+    if (response.code === 200) {
+      if (response.msg.first === "success") {
+        router.push({ name: 'ChatHome' });
+      } else {
+        registerError.value = response.msg.second;
+      }
+    } else {
+      console.error('登录失败:', response.msg.second);
+    }
+  }).catch(error => {
+    console.error('登录时出错:', error);
+  });
+}
+
+const onLogin = () => {
+  const loginData = login(loginUsername.value, loginPassword.value)
+  console.log(loginData)
+  loginData.then(response => {
+    if (response.code === 200) {
+      if (response.msg.first === "success") {
+        router.push({ name: 'ChatHome' });
+      } else {
+        loginError.value = response.msg.second;
+      }
+    } else {
+      console.error('登录失败:', response.msg.second);
+    }
+  }).catch(error => {
+    console.error('登录时出错:', error);
+  });
+}
 // 去注册
-const onRegister = () => {
+const ToRegister = () => {
   console.log(formBox)
   changedStyle.value = "changed-styleB"
   isRegisterHidden.value = false;
@@ -89,7 +149,7 @@ const onRegister = () => {
 }
 
 // 去登录
-const onLogin = () => {
+const ToLogin = () => {
   console.log('Login button clicked');
   changedStyle.value = "changed-styleA"
   isRegisterHidden.value = true;
@@ -411,10 +471,6 @@ input:focus::placeholder {
   /* 右侧按钮悬停样式 */
   background-color: #ebc777;
   color: #fff;
-}
-
-.heading {
-  line-height: 100; /* 设置合适的行高 */
 }
 
 ul li {

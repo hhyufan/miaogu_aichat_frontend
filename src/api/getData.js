@@ -20,3 +20,21 @@ export const sendChatMessage = (chatMessage, Type) => {
 export const getChatMsg = (params, Type) => {
     return axios.get(`${baseUrl}/${Type}/messages`, params).then(res => res.data);
 };
+
+// 获取登录请求信息
+export const login = (username, password) => {
+    return axios.post(`${baseUrl}/user/login`, {username, password},  {
+        headers: {
+            'Content-Type': 'application/json' // 设置为 JSON
+        }
+    }).then(res => res.data);
+}
+
+// 获取注册请求信息
+export const register = (username, password, email) => {
+    return axios.post(`${baseUrl}/user/register`, {username, password, email},  {
+        headers: {
+            'Content-Type': 'application/json' // 设置为 JSON
+        }
+    }).then(res => res.data);
+}
