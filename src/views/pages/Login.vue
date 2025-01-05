@@ -70,9 +70,10 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {register, login} from '@/api/getData'
+import store from "@/vuex/store.js";
 const router = useRouter();
 
 // 样式表绑定
@@ -97,6 +98,9 @@ const loginError = ref("");
 const registerError = ref("");
 
 
+const updateVariable = (value) => {
+  store.dispatch('updateUserName', value);
+};
 
 const onRegister =  () => {
   console.log(registerPassword.value)
@@ -110,6 +114,7 @@ const onRegister =  () => {
   registerData.then(response => {
     if (response.code === 200) {
       if (response.msg.first === "success") {
+        updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
         registerError.value = response.msg.second;
@@ -128,6 +133,7 @@ const onLogin = () => {
   loginData.then(response => {
     if (response.code === 200) {
       if (response.msg.first === "success") {
+        updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {
         loginError.value = response.msg.second;

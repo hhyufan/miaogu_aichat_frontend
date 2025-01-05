@@ -18,12 +18,14 @@
               <div class="info-time">
                 <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>
+                <span>{{friendName}}</span>
               </div>
               <div class="chat-text">{{ item.msg }}</div>
             </div>
             <div class="chat-me" v-else>
               <div class="info-time">
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>
+                <span>{{userName}}</span>
                 <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
               </div>
               <div class="chat-text">{{ item.msg }}</div>
@@ -63,14 +65,16 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import {ref, onMounted, watch, nextTick, computed} from 'vue';
 import { animation, debounce } from "@/util/util"; // 引入防抖函数
 import {getChatMsg, sendChatMessage} from "@/api/getData";
 import HeadPortrait from "@/views/components/HeadPortrait.vue";
 import headPortraitImg from "@/assets/img/head_portrait.jpg"; // 使用 import 导入图片
 import defaultHeadImg from '@/assets/icons/user-icon.svg'; // 导入默认头像
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
-import avatarGPT4 from "@/assets/img/head_portrait2.jpg"; // 导入头像 GPT4
+import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
+import store from "@/vuex/store.js"; // 导入头像 GPT4
+const userName = computed(() => store.state.UserName);
 
 export default {
   components: {
@@ -88,6 +92,7 @@ export default {
     const chatContent = ref(null);
     const loading = ref(false);
     const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // 初始值为好友头像或默认头像
+    const friendName = ref(props.friendInfo.name)
     const getAvatar = (uid) => {
       switch (uid) {
         case '1002':
@@ -182,7 +187,7 @@ export default {
     });
 
     watch(() => props.friendInfo, () => {
-
+      friendName.value = props.friendInfo.name
       friendHeadImg.value = getAvatar(props.friendInfo.id) || defaultHeadImg; // 更新头像
       getFriendChatMsg();
     });
@@ -200,7 +205,9 @@ export default {
       loading,
       friendHeadImg,
       headPortraitImg,
-      handleImageError
+      handleImageError,
+      userName,
+      friendName
     };
   }
 };
