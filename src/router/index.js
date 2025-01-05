@@ -1,21 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/home.vue'; // 引入 Home 组件
 import ChatHome from '../views/pages/chatHome/index.vue';
 import Setting from "@/views/pages/setting.vue";
+import Login from "@/views/pages/Login.vue"; // 引入 LoginRegister 组件
 
 const routes = [
   {
-    path: "/",
-    redirect: "/ChatHome",
+    path: '/',
+    name: 'Login',
+    component: Login, // 默认路由指向登录注册页面
   },
   {
-    path: "/ChatHome",
-    name: "ChatHome",
-    component: ChatHome,
-  },
-  {
-    path: "/Setting",
-    name: "Setting",
-    component: Setting
+    path: '/Home',
+    name: 'Home',
+    component: Home,
+    children: [
+      {
+        path: '',
+        redirect: 'ChatHome', // 默认子路由重定向到 ChatHome
+      },
+      {
+        path: 'ChatHome',
+        name: 'ChatHome',
+        component: ChatHome,
+      },
+      {
+        path: 'Setting',
+        name: 'Setting',
+        component: Setting,
+      },
+    ],
   },
 ];
 

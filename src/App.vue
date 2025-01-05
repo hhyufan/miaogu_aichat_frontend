@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <Home />
+
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import Home from './views/home.vue';
+import Login from "@/views/pages/Login.vue";
 
 export default defineComponent({
   name: 'App',
   components: {
+    Login,
     Home
   }
 });
