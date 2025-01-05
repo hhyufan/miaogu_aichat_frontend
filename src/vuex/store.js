@@ -3,7 +3,7 @@ import { createStore } from 'vuex';
 
 const store = createStore({
     state: {
-        UserName: 'Initial Value'
+        UserName: false
     },
     mutations: {
         setUserName(state, value) {

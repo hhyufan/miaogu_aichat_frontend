@@ -74,6 +74,7 @@ import defaultHeadImg from '@/assets/icons/user-icon.svg'; // 导入默认头像
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
 import store from "@/vuex/store.js"; // 导入头像 GPT4
+
 const userName = computed(() => store.state.UserName);
 
 export default {

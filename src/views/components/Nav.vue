@@ -1,5 +1,5 @@
 <template>
-    <div class="nav">
+    <div class="nav" v-if="userName">
         <div class="own-pic">
             <HeadPortrait :imgUrl="imgUrl" />
         </div>
@@ -16,15 +16,18 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import {computed, defineComponent, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import HeadPortrait from "./HeadPortrait.vue";
 import headPortrait_img from '@/assets/img/head_portrait.jpg'
+import store from "@/vuex/store.js";
+const userName = computed(() => !!store.state.UserName);
 export default defineComponent({
     components: {
         HeadPortrait,
     },
     setup() {
+        console.log(userName.value)
         const router = useRouter();
         const menuList = ref(["icon-aichat", "icon-setting"]);
         const current = ref(0);
@@ -48,7 +51,8 @@ export default defineComponent({
             menuList,
             current,
             imgUrl,
-            changeMenu
+            changeMenu,
+            userName
         };
     }
 });
