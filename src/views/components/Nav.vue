@@ -7,8 +7,8 @@
             <ul class="menu-list">
                 <li v-for="(item, index) in menuList" :key="index" :class="{ activeNav: index === current }"
                     @click="changeMenu(index)">
-                    <div class="block"></div>
-                    <span class="iconfont" :class="item"></span>
+                    <div :class="['block', `block-color${switchState ? 'A' : 'B'}`]"></div>
+                    <span class="iconfont" :class="[item, `iconfont-color${switchState ? 'A' : 'B'}`]"></span>
                 </li>
             </ul>
         </div>
@@ -22,6 +22,7 @@ import HeadPortrait from "./HeadPortrait.vue";
 import headPortrait_img from '@/assets/img/head_portrait.jpg'
 import store from "@/vuex/store.js";
 const userName = computed(() => !!store.state.UserName);
+const switchState = computed(() => store.state.switchState);
 export default defineComponent({
     components: {
         HeadPortrait,
@@ -54,7 +55,8 @@ export default defineComponent({
             current,
             imgUrl,
             changeMenu,
-            userName
+            userName,
+            switchState
         };
     }
 });
@@ -80,8 +82,13 @@ export default defineComponent({
                 list-style: none;
                 cursor: pointer;
                 position: relative;
+                .block-colorA {
+                  background-color: rgb(153, 125, 236);
+                }
+                .block-colorB {
+                  background-color: rgb(253, 216, 95);
+                }
                 .block {
-                    background-color: rgb(153, 125, 236);
                     position: absolute;
                     left: -40px;
                     width: 6px;
@@ -93,9 +100,11 @@ export default defineComponent({
                 }
 
                 &:hover {
-
-                    span {
-                        color: rgb(111, 81, 209);
+                    .iconfont-colorA {
+                      color: rgb(111, 81, 209);
+                    }
+                    .iconfont-colorB {
+                      color: rgb(243, 194, 93);
                     }
                     .block {
                         opacity: 1;
@@ -113,10 +122,12 @@ export default defineComponent({
 }
 
 .activeNav {
-    span {
-        color: rgb(153, 125, 236);
-    }
-
+  .iconfont-colorA {
+    color: rgb(111, 81, 209);
+  }
+  .iconfont-colorB {
+    color: rgb(243, 194, 93);
+  }
     .block {
         opacity: 1 !important;
     }

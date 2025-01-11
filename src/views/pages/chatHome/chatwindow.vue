@@ -56,7 +56,6 @@
               </svg>
             </div>
           </div>
-          <span>Send</span>
         </div>
 
       </div>
@@ -241,7 +240,7 @@ export default {
         color: #9374ef;
       }
       .name-colorB {
-        color: #f8d0a4;
+        color: #fab260;
       }
       .name {
         font-size: 20px;
@@ -251,7 +250,7 @@ export default {
         color: #8a6dea;
       }
       .detail-colorB {
-        color: #f8d0a4;
+        color: #fdc674;
       }
       .detail {
         font-size: 12px;
@@ -295,9 +294,16 @@ export default {
           color: #997dec;
         }
         .info-time-colorB {
-          color: #f8d0a4;
+          color: #fdc674;
         }
 
+        .chat-textA {
+          color: #9374ef;
+        }
+
+        .chat-textB {
+          color: #fab260;
+        }
         .chat-friend {
           width: 100%;
           float: left;
@@ -315,20 +321,14 @@ export default {
 
           }
 
-          .chat-textA {
-            color: #9374ef;
-          }
 
-          .chat-textB {
-            color: #fab260;
-          }
           .info-time {
             margin: 10px 0;
             font-size: 14px;
 
             img {
-              width: 30px;
-              height: 30px;
+              width: 36px;
+              height: 36px;
               border-radius: 50%;
               vertical-align: middle;
               margin-right: 10px;
@@ -346,19 +346,11 @@ export default {
           justify-content: flex-end;
           align-items: flex-end;
 
-          .chat-textA {
-            background-color: rgb(238, 244, 175);
-            color: #8a6dea;
-          }
-          .chat-textB {
-            background-color: rgb(153, 125, 236);
-            color: rgb(238, 244, 175);
-          }
           .chat-text {
             max-width: 90%;
             padding: 20px;
             border-radius: 20px 20px 5px 20px;
-
+            background-color: rgba(255, 255, 255, 0.7);
           }
 
           .info-time {
@@ -368,8 +360,8 @@ export default {
             justify-content: flex-end;
 
             img {
-              width: 30px;
-              height: 30px;
+              width: 38px;
+              height: 38px;
               border-radius: 50%;
               vertical-align: middle;
               margin-left: 10px;
@@ -401,8 +393,8 @@ export default {
         cursor: pointer;
 
         img {
-          width: 30px;
-          height: 30px;
+          width: 38px;
+          height: 38px;
           position: absolute;
           left: 50%;
           top: 50%;
@@ -410,14 +402,16 @@ export default {
         }
       }
       .inputs-colorA {
-        background-color: rgb(238, 244, 175);
-        border: 2px solid #efd3a4;
+        background-color: #a78ff3;
+        border: 1px solid rgb(153, 125, 236);
       }
 
       .inputs-colorB {
-        background-color: #c7baf1;
-        border: 1px solid rgb(153, 125, 236);
+        background-color: rgb(241, 201, 124);
+        border: 2px solid #fdbd5e;
       }
+
+
       .inputs {
         width: 90%;
         height: 5vh;
@@ -426,7 +420,7 @@ export default {
         box-sizing: border-box;
         transition: 0.2s;
         font-size: 20px;
-        color: #fff;
+        color: rgba(255, 255, 255, 0.74);
         font-weight: 100;
         margin: 0 2vh;
 
@@ -435,17 +429,18 @@ export default {
         }
       }
       .send-colorA {
-        background-color: rgb(153, 125, 236);
-        color: #d1dc71;
-        box-shadow: 0 0 5px 0 rgb(111, 81, 209);
+        background-color: rgb(186, 165, 244);
+        color: #7957ea;
+        box-shadow: 0 0 5px 0 rgb(149, 121, 237);
       }
       .send-colorB {
         background-color: #efd3a4;
-        color: #8a6dea;
+        color: #f1a720;
         box-shadow: 0 0 5px 0 rgb(220, 227, 155);
       }
       .send {
-
+        width: 2.9vw;
+        height: 5vh;
         font-family: inherit;
         display: flex;
         align-items: center;
@@ -454,6 +449,7 @@ export default {
         font-weight: bold;
         overflow: hidden;
         font-size: 10px;
+        justify-content: center; /* 水平居中 */
         transition: 0.3s;
         cursor: pointer;
 
@@ -470,7 +466,7 @@ export default {
         }
 
         &.hover-a:hover {
-          box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+          box-shadow: 0 0 10px 0 rgb(149, 121, 237);
         }
 
         &.hover-b:hover {
@@ -483,11 +479,7 @@ export default {
           }
 
           svg {
-            transform: translateX(1.2em) rotate(45deg) scale(1.1);
-          }
-
-          span {
-            transform: translateX(5em);
+            transform: rotate(45deg) scale(1.1);
           }
         }
 

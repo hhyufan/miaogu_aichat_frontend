@@ -1,7 +1,7 @@
 <template>
   <div class="chatHome">
     <div class="chatLeft">
-      <div class="title">
+      <div :class="[`title-color${switchState ? 'A' : 'B'}`,'title']">
         <h1>喵咕聊天室</h1>
       </div>
       <div class="online-person">
@@ -103,9 +103,13 @@ const handleImageError = () => {
 
   .chatLeft {
     width: 280px;
-
-    .title {
+    .title-colorA {
       color: #8a6dea;
+    }
+    .title-colorB {
+      color: #fab260;
+    }
+    .title {
       transition: color 0.2s ease;
       margin-top: 20px;
       padding-left: 10px;

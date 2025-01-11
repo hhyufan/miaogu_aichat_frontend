@@ -1,9 +1,9 @@
 <template>
-  <div class="person-card" :class="{ activeCard: personInfo.id === current }" @click="handleClick">
+  <div class="person-card" :class="[`hover-${switchState ? 'a' : 'b'}`, {[`active-card${switchState ? 'A' : 'B'}`]: personInfo.id === current, activeCard: personInfo.id === current }]" @click="handleClick">
     <div class="info">
       <HeadPortrait :imgUrl="avatarUrl" />
       <div class="info-detail">
-        <div class="name">{{ personInfo.name }}</div>
+        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ personInfo.name }}</div>
         <div class="detail">{{ personInfo.detail }}</div>
       </div>
     </div>
@@ -11,11 +11,12 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, defineEmits } from 'vue';
+import {defineComponent, ref, watch, defineEmits, computed} from 'vue';
 import HeadPortrait from "./HeadPortrait.vue";
 import defaultHeadImg from "@/assets/img/head_portrait.jpg";
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
-import avatarGPT4 from "@/assets/img/head_portrait2.jpg"; // 导入头像 GPT4
+import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
+import store from "@/vuex/store.js"; // 导入头像 GPT4
 export default defineComponent({
   props: {
     personInfo: {
@@ -41,6 +42,7 @@ export default defineComponent({
           return defaultHeadImg; // 默认头像
       }
     };
+    const switchState = computed(() => store.state.switchState);
     const current = ref('');
     const avatarUrl = ref(defaultHeadImg);
 
@@ -66,7 +68,8 @@ export default defineComponent({
       current,
       isActive,
       handleClick,
-      avatarUrl
+      avatarUrl,
+      switchState
     };
   }
 });
@@ -94,9 +97,13 @@ export default defineComponent({
     .info-detail {
       margin-top: 5px;
       margin-left: 20px;
-
+      .name-colorA {
+        color: #9374ef;
+      }
+      .name-colorB {
+        color: #f0fb6c;
+      }
       .name {
-        color: rgb(209, 220, 113);
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -113,11 +120,18 @@ export default defineComponent({
     }
   }
 
-  &:hover {
-    background-color: rgb(153, 125, 236);
-    transition: 0.3s;
+  &.hover-a:hover {
+    background-color: rgb(168, 145, 236);
     box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+  }
 
+  &.hover-b:hover {
+    background-color: rgb(255, 214, 153);
+    box-shadow: 0 0 10px 0 rgb(246, 209, 124);
+  }
+
+  &:hover {
+    transition: 0.3s;
     .info {
       .info-detail {
         .detail {
@@ -128,11 +142,19 @@ export default defineComponent({
   }
 }
 
-.activeCard {
-  background-color: rgb(153, 125, 236);
-  transition: 0.3s;
-  box-shadow: 3px 2px 10px 0 rgb(111, 81, 209);
+.active-cardA {
+  background-color: rgb(168, 145, 236);
+  box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+}
 
+.active-cardB {
+  background-color: rgb(255, 214, 153);
+  box-shadow: 0 0 10px 0 rgb(246, 209, 124);
+}
+
+.activeCard {
+
+  transition: 0.3s;
   .info {
     .info-detail {
       .detail {
