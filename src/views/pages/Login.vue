@@ -1,4 +1,5 @@
 <template>
+
   <div class="login">
     <div class="container">
       <div :class="['form-box', changedStyle]">
@@ -208,8 +209,8 @@ const ToLogin = () => {
   /* 设置绝对定位 */
   position: fixed;
   top:-4%;
-  width: 320px;
-  height: 500px;
+  width: 22vw;
+  height: 65vh;
   border-radius: 5px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
   display: flex;
@@ -596,6 +597,36 @@ ul li {
     opacity: 0; /* 最终透明度为0 */
     bottom: 90vh; /* 最终位置在视口高度的90%处 */
     border-radius: 50%; /* 最终边框半径为50%（圆形） */
+  }
+}
+
+/* 添加媒体查询以适应不同屏幕尺寸 */
+@media (max-width: 768px) {
+  .container {
+    width: 90%; /* 在小屏幕上使用较小的宽度 */
+    height: auto; /* 高度自适应 */
+  }
+
+  .form-box {
+    width: 90%; /* 表单框宽度自适应 */
+    height: auto; /* 高度自适应 */
+  }
+
+  .con-box {
+    width: 100%; /* 内容框宽度自适应 */
+    padding: 10px; /* 添加一些内边距 */
+  }
+
+  h1, h2 {
+    font-size: 1.5em; /* 字体大小自适应 */
+  }
+
+  input {
+    width: 90%; /* 输入框宽度自适应 */
+  }
+
+  button {
+    width: 90%; /* 按钮宽度自适应 */
   }
 }
 

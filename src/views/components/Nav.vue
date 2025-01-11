@@ -28,6 +28,7 @@ export default defineComponent({
     },
     setup() {
         console.log(userName.value)
+
         const router = useRouter();
         const menuList = ref(["icon-aichat", "icon-setting"]);
         const current = ref(0);
@@ -44,6 +45,7 @@ export default defineComponent({
                 default:
                     router.push({ name: "ChatHome" });
             }
+
             current.value = index;
         };
 
@@ -78,7 +80,6 @@ export default defineComponent({
                 list-style: none;
                 cursor: pointer;
                 position: relative;
-
                 .block {
                     background-color: rgb(153, 125, 236);
                     position: absolute;
@@ -92,10 +93,10 @@ export default defineComponent({
                 }
 
                 &:hover {
+
                     span {
                         color: rgb(111, 81, 209);
                     }
-
                     .block {
                         opacity: 1;
                     }

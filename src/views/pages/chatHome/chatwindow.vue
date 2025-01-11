@@ -5,41 +5,41 @@
         <HeadPortrait :imgUrl="friendHeadImg" @error="handleImageError" />
       </div>
       <div class="info-detail">
-        <div class="name">{{ friendInfo.name }}</div>
-        <div class="detail">{{ friendInfo.detail }}</div>
+        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ friendInfo.name }}</div>
+        <div :class="[`detail-color${switchState ? 'A' : 'B'}`,'detail']">{{ friendInfo.detail }}</div>
       </div>
     </div>
-    <div class="bottom">
+    <div :class="[`bottom-color${switchState ? 'A' : 'B'}`, 'bottom']">
       <div class="chat-content" ref="chatContent">
         <div v-if="loading">加载中...</div>
         <div v-else>
           <div class="chat-wrapper" v-for="item in chatList" :key="item.id">
             <div class="chat-friend" v-if="item.uid !== 'User'">
-              <div class="info-time">
+              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
                 <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
-                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>
+                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{friendName}}</span>
               </div>
-              <div class="chat-text">{{ item.msg }}</div>
+              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]">{{ item.msg }}</div>
             </div>
             <div class="chat-me" v-else>
-              <div class="info-time">
-                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>
+              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{userName}}</span>
                 <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
               </div>
-              <div class="chat-text">{{ item.msg }}</div>
+              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]">{{ item.msg }}</div>
             </div>
           </div>
         </div>
       </div>
       <div class="chatInputs">
         <input
-            class="inputs"
+            :class="[`inputs-color${switchState ? 'A' : 'B'}`,'inputs']"
             v-model="inputMsg"
             @keyup.enter="sendText"
         />
-        <div class="send" @click="sendText">
+        <div :class="[`hover-${switchState ? 'a' : 'b'}`, `send-color${switchState ? 'A' : 'B'}`, 'send']" @click="sendText">
           <div class="svg-wrapper-1">
             <div class="svg-wrapper">
               <svg
@@ -73,8 +73,8 @@ import headPortraitImg from "@/assets/img/head_portrait.jpg"; // 使用 import �
 import defaultHeadImg from '@/assets/icons/user-icon.svg'; // 导入默认头像
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
-import store from "@/vuex/store.js"; // 导入头像 GPT4
-
+import store from "@/vuex/store.js";
+const switchState = computed(() => store.state.switchState);
 const userName = computed(() => store.state.UserName);
 
 export default {
@@ -94,6 +94,7 @@ export default {
     const loading = ref(false);
     const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // 初始值为好友头像或默认头像
     const friendName = ref(props.friendInfo.name)
+
     const getAvatar = (uid) => {
       switch (uid) {
         case '1002':
@@ -104,8 +105,6 @@ export default {
           return headPortraitImg || defaultHeadImg; // 默认头像
       }
     };
-
-
 
     const scrollBottom = debounce(() => {
       const scrollDom = chatContent.value;
@@ -208,7 +207,8 @@ export default {
       headPortraitImg,
       handleImageError,
       userName,
-      friendName
+      friendName,
+      switchState
     };
   }
 };
@@ -237,26 +237,39 @@ export default {
     .info-detail {
       float: left;
       margin: 5px 20px 0;
-
+      .name-colorA {
+        color: #9374ef;
+      }
+      .name-colorB {
+        color: #f8d0a4;
+      }
       .name {
         font-size: 20px;
         font-weight: 600;
-        color: #9374ef;
       }
-
-      .detail {
+      .detail-colorA {
         color: #8a6dea;
+      }
+      .detail-colorB {
+        color: #f8d0a4;
+      }
+      .detail {
         font-size: 12px;
         margin-top: 2px;
       }
     }
   }
+  .bottom-colorA {
+    background-color: #c7baf1;
+  }
 
+  .bottom-colorB {
+    background-color: rgb(238, 244, 175);
+  }
   .bottom {
     width: 100%;
-    height: 70vh;
-    background-color: rgb(238, 241, 168);
-    border-radius: 20px;
+    height: 75vh;
+    border-radius: 2vmin;
     padding: 20px;
     box-sizing: border-box;
     position: relative;
@@ -278,6 +291,13 @@ export default {
         position: relative;
         word-break: break-all;
 
+        .info-time-colorA {
+          color: #997dec;
+        }
+        .info-time-colorB {
+          color: #f8d0a4;
+        }
+
         .chat-friend {
           width: 100%;
           float: left;
@@ -292,16 +312,18 @@ export default {
             padding: 20px;
             border-radius: 20px 20px 20px 5px;
             background-color: rgba(255, 255, 255, 0.7);
-            color: #9374ef;
 
-            &:hover {
-              background-color: rgb(39, 42, 55);
-            }
           }
 
+          .chat-textA {
+            color: #9374ef;
+          }
+
+          .chat-textB {
+            color: #fab260;
+          }
           .info-time {
             margin: 10px 0;
-            color: #997dec;
             font-size: 14px;
 
             img {
@@ -312,11 +334,6 @@ export default {
               margin-right: 10px;
             }
 
-            span:last-child {
-              color: rgb(153, 125, 236);
-              margin-left: 10px;
-              vertical-align: middle;
-            }
           }
         }
 
@@ -329,21 +346,23 @@ export default {
           justify-content: flex-end;
           align-items: flex-end;
 
+          .chat-textA {
+            background-color: rgb(238, 244, 175);
+            color: #8a6dea;
+          }
+          .chat-textB {
+            background-color: rgb(153, 125, 236);
+            color: rgb(238, 244, 175);
+          }
           .chat-text {
             max-width: 90%;
             padding: 20px;
             border-radius: 20px 20px 5px 20px;
-            background-color: rgb(153, 125, 236);
-            color: #e3ed67;
 
-            &:hover {
-              background-color: rgb(111, 81, 209);
-            }
           }
 
           .info-time {
             margin: 10px 0;
-            color: #997dec;
             font-size: 14px;
             display: flex;
             justify-content: flex-end;
@@ -360,29 +379,24 @@ export default {
               line-height: 30px;
             }
 
-            span:first-child {
-              color: rgb(153, 125, 236);
-              margin-right: 10px;
-              vertical-align: middle;
-            }
           }
         }
       }
     }
 
     .chatInputs {
-      width: 90%;
+      width: 95%;
       position: absolute;
       bottom: 0;
-      margin: 3%;
+      margin: 2%;
       display: flex;
 
       .boxinput {
         width: 50px;
         height: 50px;
-        background-color: rgb(172, 154, 228);
+
         border-radius: 15px;
-        border: 1px solid rgb(153, 125, 236);
+
         position: relative;
         cursor: pointer;
 
@@ -395,29 +409,43 @@ export default {
           transform: translate(-50%, -50%);
         }
       }
+      .inputs-colorA {
+        background-color: rgb(238, 244, 175);
+        border: 2px solid #efd3a4;
+      }
 
+      .inputs-colorB {
+        background-color: #c7baf1;
+        border: 1px solid rgb(153, 125, 236);
+      }
       .inputs {
         width: 90%;
-        height: 50px;
-        background-color: rgb(172, 154, 228);
-        border-radius: 15px;
-        border: 2px solid rgb(153, 125, 236);
-        padding: 10px;
+        height: 5vh;
+        border-radius: 1vmin;
+        padding: 2vh;
         box-sizing: border-box;
         transition: 0.2s;
         font-size: 20px;
         color: #fff;
         font-weight: 100;
-        margin: 0 20px;
+        margin: 0 2vh;
 
         &:focus {
           outline: none;
         }
       }
-
-
-      .send {
+      .send-colorA {
         background-color: rgb(153, 125, 236);
+        color: #d1dc71;
+        box-shadow: 0 0 5px 0 rgb(111, 81, 209);
+      }
+      .send-colorB {
+        background-color: #efd3a4;
+        color: #8a6dea;
+        box-shadow: 0 0 5px 0 rgb(220, 227, 155);
+      }
+      .send {
+
         font-family: inherit;
         display: flex;
         align-items: center;
@@ -426,8 +454,6 @@ export default {
         font-weight: bold;
         overflow: hidden;
         font-size: 10px;
-        color: #d1dc71;
-        box-shadow: 0 0 5px 0 rgb(111, 81, 209);
         transition: 0.3s;
         cursor: pointer;
 
@@ -443,8 +469,15 @@ export default {
           transition: transform 0.3s ease-in-out;
         }
 
-        &:hover {
+        &.hover-a:hover {
           box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+        }
+
+        &.hover-b:hover {
+          box-shadow: 0 0 10px 0 rgb(251, 218, 108);
+        }
+
+        &:hover {
           .svg-wrapper {
             animation: fly-1 0.6s ease-in-out infinite alternate;
           }
