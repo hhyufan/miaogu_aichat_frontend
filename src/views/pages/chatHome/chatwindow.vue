@@ -267,7 +267,7 @@ export default {
   }
   .bottom {
     width: 100%;
-    height: 75vh;
+    height: 70vh;
     border-radius: 2vmin;
     padding: 20px;
     box-sizing: border-box;
