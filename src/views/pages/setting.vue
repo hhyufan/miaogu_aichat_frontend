@@ -30,11 +30,7 @@ export default defineComponent({
       if (confirmed) {
         clearChatMsg().then(response => {
           if (response.code === 200) {
-            if (response.msg.first === "success") {
-              alert(response.msg.second);
-            } else {
-              alert("清空聊天记录失败！");
-            }
+            alert(response.msg.success ?? "清空聊天记录失败！");
           } else {
             alert("清空聊天记录失败！");
           }

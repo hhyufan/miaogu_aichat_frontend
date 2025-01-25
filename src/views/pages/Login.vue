@@ -114,14 +114,15 @@ const onRegister =  () => {
   console.log(registerData)
   registerData.then(response => {
     if (response.code === 200) {
-      if (response.msg.first === "success") {
+      console.log(response.msg.token)
+      if (response.msg.token) {
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
         registerError.value = response.msg.second;
       }
     } else {
-      console.error('登录失败:', response.msg.second);
+      console.error('登录失败:', response.msg.error);
     }
   }).catch(error => {
     console.error('登录时出错:', error);
@@ -133,11 +134,11 @@ const onLogin = () => {
   console.log(loginData)
   loginData.then(response => {
     if (response.code === 200) {
-      if (response.msg.first === "success") {
+      if (response.msg.token) {
         updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        loginError.value = response.msg.second;
+        loginError.value = response.msg.error;
       }
     } else {
       console.error('登录失败:', response.msg.second);
