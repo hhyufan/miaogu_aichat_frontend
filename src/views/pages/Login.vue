@@ -98,28 +98,23 @@ const confirmPassword = ref("");
 const loginError = ref("");
 const registerError = ref("");
 
-
 const updateVariable = (value) => {
   store.dispatch('updateUserName', value);
 };
 
 const onRegister =  () => {
-  console.log(registerPassword.value)
-  console.log(confirmPassword.value)
   if (registerPassword.value !== confirmPassword.value) {
     registerError.value = "密码不一致！"
     return;
   }
   const registerData = register(registerUsername.value, registerPassword.value, email.value)
-  console.log(registerData)
   registerData.then(response => {
     if (response.code === 200) {
-      console.log(response.msg.token)
       if (response.msg.token) {
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        registerError.value = response.msg.second;
+        registerError.value = response.msg.error;
       }
     } else {
       console.error('登录失败:', response.msg.error);
@@ -131,7 +126,6 @@ const onRegister =  () => {
 
 const onLogin = () => {
   const loginData = login(loginUsername.value, loginPassword.value)
-  console.log(loginData)
   loginData.then(response => {
     if (response.code === 200) {
       if (response.msg.token) {
@@ -149,7 +143,6 @@ const onLogin = () => {
 }
 // 去注册
 const ToRegister = () => {
-  console.log(formBox)
   changedStyle.value = "changed-styleB"
   isRegisterHidden.value = false;
 
@@ -158,7 +151,6 @@ const ToRegister = () => {
 
 // 去登录
 const ToLogin = () => {
-  console.log('Login button clicked');
   changedStyle.value = "changed-styleA"
   isRegisterHidden.value = true;
   document.body.style.background = 'linear-gradient(200deg, #fbed77, #d8b376)';
