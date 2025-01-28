@@ -45,6 +45,9 @@ const store = createStore({
         },
         updateExpiresIn({ commit }, expiresIn) {
             commit('setExpiresIn', expiresIn);
+        },
+        updateToken({ commit }, token) {
+            commit('setToken', token);
         }
     },
     getters: {

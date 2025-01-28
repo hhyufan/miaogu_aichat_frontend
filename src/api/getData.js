@@ -61,7 +61,14 @@ export const refreshToken = async () => {
         return res.data
     });
 };
-
+export const updateToken = async () => {
+    return axiosInstance.post(`${baseUrl}/user/token`).then(
+        async res => {
+            await store.dispatch('updateToken', res.data.data.token)
+            return res.data
+        }
+    )
+}
 const processToken = async (res) => {
     await store.dispatch('login', res.token);
     await store.dispatch('updateRefreshToken', res.refreshToken);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import base from '@/api/index';
 import store from "@/vuex/store.js";
-import {refreshToken} from '@/api/getData'
+import {refreshToken, updateToken} from '@/api/getData'
 // 创建 Axios 实例
 const axiosInstance = axios.create({
     baseURL: base.baseUrl, // 这里假设 baseUrl 是定义好的 API 基础 URL
@@ -33,7 +33,10 @@ axiosInstance.interceptors.request.use(
 
 // 添加响应拦截器
 axiosInstance.interceptors.response.use(
-    response => {
+    async response => {
+        if (response.data.extra?.["isTokenUpdated"]) {
+            await updateToken()
+        }
         return response; // 返回响应数据
     },
     error => {
