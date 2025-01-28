@@ -3,8 +3,8 @@ const baseUrl = base.baseUrl;
 import axiosInstance from '@/axios/axiosInstance';
 import store from "@/vuex/store.js";
 // 获取好友
-export const getFriend = (params) => {
-    return axiosInstance.get(`${baseUrl}/friend/friendList`, params).then(res =>
+export const getFriend = () => {
+    return axiosInstance.post(`${baseUrl}/friend/friendList`).then(res =>
     {
         return res.data.data.filter(friend => friend.id !== "1001")
     });
@@ -16,7 +16,7 @@ export const sendChatMessage = (chatMessage, Type) => {
 
 // 获取聊天信息
 export const getChatMsg = (params, Type) => {
-    return axiosInstance.get(`${baseUrl}/${Type}/messages`, params).then(res => res.data);
+    return axiosInstance.post(`${baseUrl}/${Type}/messages`).then(res => res.data);
 };
 
 export const clearChatMsg = (params, Type) => {
