@@ -29,8 +29,8 @@ export default defineComponent({
       const confirmed = confirm("您确定要删除所有聊天记录吗？此操作不可逆。");
       if (confirmed) {
         clearChatMsg().then(response => {
-          if (response.code === 200) {
-            alert(response.msg.success ?? "清空聊天记录失败！");
+          if (response.code === 204) {
+            alert(response.msg);
           } else {
             alert("清空聊天记录失败！");
           }
