@@ -110,7 +110,7 @@ const onRegister =  () => {
   const registerData = register(registerUsername.value, registerPassword.value, email.value)
   registerData.then(response => {
     if (response.code === 200) {
-      if (response.msg.token) {
+      if (response.data.token) {
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
@@ -128,7 +128,7 @@ const onLogin = () => {
   const loginData = login(loginUsername.value, loginPassword.value)
   loginData.then(response => {
     if (response.code === 200) {
-      if (response.msg.token) {
+      if (response.data.token) {
         updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {

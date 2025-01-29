@@ -30,8 +30,8 @@ export const login = (username, password) => {
             'Content-Type': 'application/json' // 设置为 JSON
         }
     }).then(async res => {
-        await processToken(res.data.msg)
-        await store.dispatch('updateExpiresIn', Date.now() + +res.data.msg.expiresIn);
+        await processToken(res.data.data)
+        await store.dispatch('updateExpiresIn', Date.now() + +res.data.data.expiresIn);
         return res.data
     });
 }
@@ -43,8 +43,8 @@ export const register =async (username, password, email) => {
             'Content-Type': 'application/json' // 设置为 JSON
         }
     }).then(async res => {
-        await processToken(res.data.msg)
-        await store.dispatch('updateExpiresIn', Date.now() + +res.data.msg.expiresIn);
+        await processToken(res.data.data)
+        await store.dispatch('updateExpiresIn', Date.now() + +res.data.data.expiresIn);
         return res.data
     });
 }
