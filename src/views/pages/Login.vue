@@ -75,11 +75,11 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {register, login} from '@/api/getData'
 import store from "@/vuex/store.js";
+import {toast} from "@/plugins/toast.js";
 const router = useRouter();
 
 // 样式表绑定
 const changedStyle = ref("changed-styleA");
-const formBox = ref("form-box");
 const registerBox = ref("register-box");
 const loginBox = ref("login-box");
 
@@ -110,17 +110,17 @@ const onRegister =  () => {
   const registerData = register(registerUsername.value, registerPassword.value, email.value)
   registerData.then(response => {
     if (response.code === 200) {
-      if (response.data.token) {
+      if (response.data?.token) {
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        registerError.value = response.msg.error;
+        toast.error("注册失败", response.msg)
       }
     } else {
-      console.error('登录失败:', response.msg.error);
+      toast.error("注册失败", response.msg)
     }
   }).catch(error => {
-    console.error('登录时出错:', error);
+    toast.error('注册时出错:', error);
   });
 }
 
@@ -128,17 +128,17 @@ const onLogin = () => {
   const loginData = login(loginUsername.value, loginPassword.value)
   loginData.then(response => {
     if (response.code === 200) {
-      if (response.data.token) {
+      if (response.data?.token) {
         updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        loginError.value = response.msg.error;
+        toast.error("登录失败", response.msg)
       }
     } else {
-      console.error('登录失败:', response.msg.second);
+      toast.error("登录失败", response.msg)
     }
   }).catch(error => {
-    console.error('登录时出错:', error);
+    toast.error("登录时出错", error)
   });
 }
 // 去注册
