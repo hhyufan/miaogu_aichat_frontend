@@ -129,7 +129,7 @@ export default {
           })
           .catch((error) => {
             chatList.value = ""
-            console.error('Failed to fetch chat messages:', error);
+            console.error('Failed to fetch chat messages:', {error});
           })
           .finally(() => {
             loading.value = false;
@@ -171,11 +171,11 @@ export default {
                 });
 
               } else {
-                toast.error("发送消息失败", response.msg)
+                toast.error("发送消息失败", {error: response.msg})
               }
             })
             .catch(error => {
-              toast.error("发送消息时出错", error);
+              toast.error("发送消息时出错",{error});
             });
       } else {
         toast.warning("消息不能为空哦~", {closable: true, debounce: 2000})
