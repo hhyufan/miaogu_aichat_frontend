@@ -114,10 +114,10 @@ const onRegister =  () => {
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        toast.error("注册失败", {error: response.msg})
+        registerError.value = response.msg
       }
     } else {
-      toast.error("注册失败", {error: response.msg})
+      registerError.value = response.msg
     }
   }).catch(error => {
     toast.error('注册时出错', {error});
@@ -132,10 +132,10 @@ const onLogin = () => {
         updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {
-        toast.error("登录失败", {error: response.msg})
+        loginError.value = response.msg
       }
     } else {
-      toast.error("登录失败", {error: response.msg})
+      loginError.value = response.msg
     }
   }).catch(error => {
     toast.error("登录时出错", {error})
