@@ -31,6 +31,11 @@ const store = createStore({
         }
     },
     actions: {
+
+        toLogin({ commit }) {
+            commit('setToken', null);
+            window.location.href = '/';
+        },
         updateUserName({ commit }, value) {
             commit('setUserName', value);
         },

@@ -21,6 +21,7 @@
 <script>
 import {defineComponent} from 'vue';
 import {clearChatMsg} from "@/api/getData.js";
+import {toast} from "@/plugins/toast.js";
 
 export default defineComponent({
   methods: {
@@ -30,17 +31,16 @@ export default defineComponent({
       if (confirmed) {
         clearChatMsg().then(response => {
           if (response.code === 204) {
-            alert(response.msg);
+            toast.success("聊天记录已清空");
           } else {
-            alert("清空聊天记录失败！");
+            toast.error("清空聊天记录失败！");
           }
         }).catch(error => {
-          console.error('清空聊天记录时出错:', error);
-          alert("清空聊天记录时发生错误！");
+          toast.error("清空聊天记录时发生错误！", error);
         });
-        console.log("聊天记录已清空");
+        toast.success("聊天记录已清空");
       } else {
-        console.log("用户取消了清空聊天记录的操作");
+        toast.warning("用户取消了清空聊天记录的操作");
       }
     }
   }

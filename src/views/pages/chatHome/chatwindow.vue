@@ -73,6 +73,7 @@ import defaultHeadImg from '@/assets/icons/user-icon.svg'; // 导入默认头像
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
 import store from "@/vuex/store.js";
+import {toast} from "@/plugins/toast.js";
 const switchState = computed(() => store.state.switchState);
 const userName = computed(() => store.state.UserName);
 
@@ -170,14 +171,14 @@ export default {
                 });
 
               } else {
-                console.error('发送消息失败:', response.msg);
+                toast.error("发送消息失败", response.msg)
               }
             })
             .catch(error => {
-              console.error('发送消息时出错:', error);
+              toast.error("发送消息时出错", error);
             });
       } else {
-        console.warn("消息不能为空哦~");
+        toast.warning("消息不能为空哦~")
       }
     };
 
