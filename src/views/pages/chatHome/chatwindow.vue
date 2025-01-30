@@ -178,7 +178,7 @@ export default {
               toast.error("发送消息时出错", error);
             });
       } else {
-        toast.warning("消息不能为空哦~")
+        toast.warning("消息不能为空哦~", {closable: true, debounce: 2000})
       }
     };
 

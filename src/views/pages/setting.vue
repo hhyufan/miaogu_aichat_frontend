@@ -31,16 +31,15 @@ export default defineComponent({
       if (confirmed) {
         clearChatMsg().then(response => {
           if (response.code === 204) {
-            toast.success("聊天记录已清空");
+            toast.success("聊天记录已清空", {closable: true});
           } else {
             toast.error("清空聊天记录失败！");
           }
         }).catch(error => {
           toast.error("清空聊天记录时发生错误！", error);
         });
-        toast.success("聊天记录已清空");
       } else {
-        toast.warning("用户取消了清空聊天记录的操作");
+        toast.warning("操作已取消", {closable: true});
       }
     }
   }
