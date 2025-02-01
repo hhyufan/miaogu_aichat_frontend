@@ -31,10 +31,10 @@ export async function getRepoStarCount(owner, repo) {
     try {
         const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
         const data = await response.json();
-        console.log(JSON.stringify(data))
 
         if (response.ok) {
-            await store.dispatch('updateRepoStarCount', data["stargazers_count"]);
+            console.log(+data["stargazers_count"])
+            await store.dispatch('updateRepoStarCount', +data["stargazers_count"]);
         } else {
             console.error(`Error: ${data.message}`);
         }

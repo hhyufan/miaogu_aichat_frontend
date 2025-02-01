@@ -34,7 +34,7 @@ const store = createStore({
         setExpiresIn(state, expiresIn) {
             state.expiresIn = expiresIn;
         },
-        settRepoStarCount(state, repoStarCount) {
+        setRepoStarCount(state, repoStarCount) {
             state.repoStarCount = repoStarCount
         }
     },
@@ -65,7 +65,7 @@ const store = createStore({
             commit('setToken', token);
         },
         updateRepoStarCount({ commit }, repoStarCount) {
-            commit('repoStarCount', repoStarCount)
+            commit('setRepoStarCount', repoStarCount)
         }
     },
     getters: {
