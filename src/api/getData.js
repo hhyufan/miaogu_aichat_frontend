@@ -27,6 +27,22 @@ export const rollbackChatMsg = (params) => {
     return axiosInstance.post(`${baseUrl}/chat/revert`, params).then(res => res.data);
 };
 
+export async function getRepoStarCount(owner, repo) {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+        const data = await response.json();
+        console.log(JSON.stringify(data))
+
+        if (response.ok) {
+            await store.dispatch('updateRepoStarCount', data["stargazers_count"]);
+        } else {
+            console.error(`Error: ${data.message}`);
+        }
+    } catch (error) {
+        console.error('Failed to fetch repository data:', error);
+    }
+}
+
 // 获取登录请求信息
 export const login = (username, password) => {
     return axiosInstance.post(`${baseUrl}/user/login`, {username, password},  {
@@ -34,7 +50,6 @@ export const login = (username, password) => {
             'Content-Type': 'application/json' // 设置为 JSON
         }
     }).then(async res => {
-        console.log("resq", res)
         if (res.data.code === 200) {
             await processToken(res.data.data)
             await store.dispatch('updateExpiresIn', Date.now() + +res.data.data.expiresIn);

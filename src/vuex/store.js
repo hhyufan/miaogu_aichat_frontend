@@ -4,12 +4,17 @@ import { createStore } from 'vuex';
 const store = createStore({
     state: {
         UserName: false,
+        userInfo: {},
         switchState: false,
         token:  null, // 从 localStorage 获取 JWT
         refreshToken: null,
         expiresIn: Date.now(),
+        repoStarCount: 0
     },
     mutations: {
+        setUserInfo(state, value) {
+            state.userInfo = value;
+        },
         setUserName(state, value) {
             state.UserName = value;
         },
@@ -28,10 +33,15 @@ const store = createStore({
         },
         setExpiresIn(state, expiresIn) {
             state.expiresIn = expiresIn;
+        },
+        settRepoStarCount(state, repoStarCount) {
+            state.repoStarCount = repoStarCount
         }
     },
     actions: {
-
+        updateUserInfo({ commit }, value) {
+            commit("setUserInfo", value);
+        },
         toLogin({ commit }) {
             commit('setToken', null);
             window.location.href = '/';
@@ -53,6 +63,9 @@ const store = createStore({
         },
         updateToken({ commit }, token) {
             commit('setToken', token);
+        },
+        updateRepoStarCount({ commit }, repoStarCount) {
+            commit('repoStarCount', repoStarCount)
         }
     },
     getters: {

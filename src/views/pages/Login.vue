@@ -111,6 +111,10 @@ const onRegister =  () => {
   registerData.then(response => {
     if (response.code === 200) {
       if (response.data?.token) {
+        if(response.data?.user) {
+          const userInfo = {...response.data.user, ...{lastLogin: formatBeijingTime()}}
+          store.dispatch('updateUserInfo', userInfo);
+        }
         updateVariable(registerUsername)
         router.push({ name: 'ChatHome' });
       } else {
@@ -123,12 +127,16 @@ const onRegister =  () => {
     toast.error('注册时出错', {error});
   });
 }
-
+const formatBeijingTime = () => new Date(Date.now() + 288e5).toISOString().replace(/T|\.\d+/g, ' ');
 const onLogin = () => {
   const loginData = login(loginUsername.value, loginPassword.value)
   loginData.then(response => {
     if (response.code === 200) {
       if (response.data?.token) {
+        if(response.data?.user) {
+          const userInfo = {...response.data.user, ...{lastLogin: formatBeijingTime()}}
+          store.dispatch('updateUserInfo', userInfo);
+        }
         updateVariable(loginUsername)
         router.push({ name: 'ChatHome' });
       } else {
