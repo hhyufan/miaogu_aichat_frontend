@@ -23,6 +23,10 @@ export const clearChatMsg = (params, Type) => {
     return axiosInstance.delete(`${baseUrl}/chat/clear`, params).then(res => res.data);
 };
 
+export const rollbackChatMsg = (params) => {
+    return axiosInstance.post(`${baseUrl}/chat/revert`, params).then(res => res.data);
+};
+
 // 获取登录请求信息
 export const login = (username, password) => {
     return axiosInstance.post(`${baseUrl}/user/login`, {username, password},  {

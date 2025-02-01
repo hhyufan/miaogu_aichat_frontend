@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
 
         if (error.response && error.response.status === 401) {
             // 处理未授权的情况，例如重定向到登录页面
-            toast.error("令牌过期或未授权", error.response.data.message);
+            await toast.error("令牌过期或未授权", error.response.data.message);
             setTimeout(
                 () => window.location.href = "/",
                 1500
