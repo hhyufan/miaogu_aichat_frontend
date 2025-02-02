@@ -146,6 +146,10 @@ const onLogin = () => {
       loginError.value = response.msg
     }
   }).catch(error => {
+    if(error.status === 429 && error?.response?.data){
+      toast.error(error.response.data.message, {closable: true, duration: 2000, debounce: 2500})
+      return;
+    }
     toast.error("登录时出错", {error})
   });
 }
