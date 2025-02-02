@@ -60,6 +60,18 @@ export const register =async (username, password, email) => {
         return res.data
     });
 }
+
+export const logout = async () => {
+    return axiosInstance.post(`${baseUrl}/user/logout`, null, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(async res => {
+        await store.dispatch('logout')
+        return res.data
+    })
+}
+
 export const refreshToken = async () => {
     return axiosInstance.post(`${baseUrl}/user/refresh`, {
         username: store.state.UserName,

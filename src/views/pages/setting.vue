@@ -56,15 +56,7 @@
 
         <!-- 回滚按钮和清空按钮 -->
         <div class="right-buttons">
-          <div class="button-container">
-            <button class="rollback-button" @click="rollbackChat">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="white" class="rollback-icon" viewBox="0 0 16 16">
-                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182a.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-              </svg>
-              <span class="tooltip">还原聊天记录</span>
-            </button>
-          </div>
+
 
           <div class="button-container">
             <button class="bin-button" @click="clearChat">
@@ -83,6 +75,30 @@
               <span class="tooltip">清空聊天记录</span>
             </button>
           </div>
+
+          <div class="button-container">
+            <button class="rollback-button" @click="rollbackChat">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="white" class="rollback-icon" viewBox="0 0 16 16">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182a.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+              </svg>
+              <span class="tooltip">还原聊天记录</span>
+            </button>
+          </div>
+
+          <div class="button-container">
+            <button class="logout-button" @click="logout">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+                <path
+                    d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
+                    fill="white"
+                    stroke="none"
+                />
+              </svg>
+              <span class="tooltip">退出登录</span>
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -91,7 +107,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { clearChatMsg, rollbackChatMsg, getRepoStarCount } from "@/api/getData.js";
+import {clearChatMsg, rollbackChatMsg, getRepoStarCount, logout} from "@/api/getData.js";
 import { toast } from "@/plugins/toast.js";
 import store from "../../vuex/store.js";
 export default defineComponent({
@@ -109,9 +125,6 @@ export default defineComponent({
     };
   },
   methods: {
-    formatDate(isoString) {
-      return new Date(isoString).toLocaleString();
-    },
     async rollbackChat() {
       const confirmed = confirm("确定要回滚到上次保存的聊天记录吗？此操作不可逆。");
       if (!confirmed) {
@@ -151,6 +164,26 @@ export default defineComponent({
     },
     openGithub() {
       window.open('https://github.com/hhyufan/miaogu_aichat_frontend', '_blank')
+    },
+    logout() {
+      const confirmed = confirm("您确定要退出当前账号？");
+      if (confirmed) {
+        logout()
+          .then(response => {
+            if (response.code === 200) {
+              toast.success("退出账号成功")
+              setTimeout(
+                  () => window.location.href = "/",
+                  1500
+              )
+            }
+          }).catch(error => {
+          toast.error("退出账号时发生错误！", error);
+        })
+      } else {
+        toast.warning("操作已取消", { closable: true });
+      }
+
     }
   }
 });
@@ -353,7 +386,8 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.bin-bottom {
+.bin-bottom,
+.logout-button{
   width: 15px;
 }
 
@@ -393,6 +427,42 @@ export default defineComponent({
 
 .github-button:hover .github-icon {
   animation: bounce 0.8s ease infinite;
+}
+
+.logout-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  border-radius: 15px;
+  background-color: #ff4d4d;
+  cursor: pointer;
+  border: 2px solid #ffb3b3;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  padding: 6px;
+}
+
+.logout-button svg {
+  width: 26px;  /* 适当缩小图标 */
+  height: 26px;
+  transform: scale(0.9);  /* 轻微缩放 */
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1)); /* 添加柔和阴影 */
+}
+
+.logout-button:hover {
+  width: 170px;
+  background-color: #ff1a1a;
+}
+
+.logout-button:hover .logout-icon {
+  animation: bounce 0.8s ease infinite;
+}
+
+.logout-button:active {
+  transform: scale(0.9);
 }
 
 @keyframes spin {
