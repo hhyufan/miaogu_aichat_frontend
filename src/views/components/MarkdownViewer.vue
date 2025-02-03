@@ -131,6 +131,7 @@ export default {
 /* 文本元素对齐 */
 .markdown-viewer :deep(:is(p, h1, h2, h3, h4, h5, h6)){
   text-align: left;
+  margin: 0 !important;
 }
 .markdown-viewer :deep(:is(ol, li)){
   text-align: left;
