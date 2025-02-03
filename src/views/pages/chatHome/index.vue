@@ -1,7 +1,7 @@
 <template>
   <div class="chatHome">
     <div class="chatLeft">
-      <div :class="[`title-color${switchState ? 'A' : 'B'}`,'title']">
+      <div :class="[`title-color${store.state.switchState ? 'A' : 'B'}`,'title']">
         <h1>喵咕聊天室</h1>
       </div>
       <div class="online-person">
@@ -14,12 +14,7 @@
       </div>
     </div>
     <div class="chatRight">
-      <div class="switch-container">
-        <div class="switch">
-          <input type="checkbox" id="toggle" v-model="switchState" @change="clickToggle"> <!-- 使用 Vuex 状态 -->
-          <label for="toggle" class="slider"></label>
-        </div>
-      </div>
+
       <div v-if="showChatWindow">
         <ChatWindow :friendInfo="chatWindowInfo" @personCardSort="personCardSort" />
       </div>
@@ -47,18 +42,12 @@ const personList = ref([]);
 const showChatWindow = ref(false);
 const chatWindowInfo = ref({});
 const currentIcon = computed(() => {
-  return switchState.value ? snapchatIcon : defaultIcon; // 根据开关状态返回不同的图标
-});
-// 计算属性映射 Vuex 状态
-const switchState = computed({
-  get: () => store.state.switchState,
-  set: (value) => store.commit('toggleSwitch', value), // 提交 mutation 更新 Vuex 状态
+  return store.state.switchState ? snapchatIcon : defaultIcon; // 根据开关状态返回不同的图标
 });
 
+
 // 切换开关时的逻辑
-const clickToggle = () => {
-  console.log("Switch is now: ", switchState.value);
-};
+
 
 // 组件挂载时获取朋友列表
 onMounted(() => {
@@ -142,56 +131,8 @@ const handleImageError = () => {
     margin-top: 20px;
     flex: 1;
     padding-right: 30px;
+    max-width: 96%;
 
-    .switch {
-      width: 60px;
-      height: 34px;
-      position: relative; /* 绝对定位标签 */
-
-    }
-    .switch-container {
-      position: absolute;
-      z-index: 1000;
-      top: 15px; /* 上边界居中 */
-      right: 30px; /* 相对于容器最右边对齐 */
-
-      .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(200deg, #fbed77, #f0c784); /* Initial background color */
-        transition:  filter 0.4s ease;
-        border-radius: 34px;
-        filter: hue-rotate(0deg); /* Initial filter value */
-        &:before {
-          position: absolute;
-          content: "";
-          height: 26px;
-          width: 26px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          transition: transform 0.4s ease;
-          border-radius: 50%;
-        }
-      }
-      input:checked + .slider {
-        filter: hue-rotate(220deg); /* Change filter value */
-      }
-
-      input:checked + .slider:before {
-        transform: translateX(26px);
-      }
-    }
 
 
     .showIcon {

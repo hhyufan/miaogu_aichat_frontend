@@ -94,9 +94,9 @@ export default {
 <style scoped>
 /* 容器基础样式 */
 .markdown-viewer {
+  max-width: 70%;
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  max-width: 800px;
   padding: 16px;
 }
 

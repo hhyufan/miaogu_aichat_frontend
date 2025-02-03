@@ -1,5 +1,11 @@
 <template>
   <div class="chat-window">
+    <div class="switch-container">
+      <div class="switch">
+        <input type="checkbox" id="toggle" v-model="switchState" @change="clickToggle"> <!-- 使用 Vuex 状态 -->
+        <label for="toggle" class="slider"></label>
+      </div>
+    </div>
     <div class="top">
       <div class="head-pic">
         <HeadPortrait :imgUrl="friendHeadImg" @error="handleImageError" />
@@ -77,7 +83,6 @@ import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
 import store from "@/vuex/store.js";
 import {toast} from "@/plugins/toast.js";
 import MarkdownViewer from "@/views/components/MarkdownViewer.vue";
-const switchState = computed(() => store.state.switchState);
 const userName = computed(() => store.state.UserName);
 
 export default {
@@ -98,7 +103,9 @@ export default {
     const loading = ref(false);
     const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // 初始值为好友头像或默认头像
     const friendName = ref(props.friendInfo.name)
-
+    const clickToggle = () => {
+      console.log("Switch is now: ", switchState.value);
+    };
     const getAvatar = (uid) => {
       switch (uid) {
         case '1002':
@@ -109,7 +116,11 @@ export default {
           return headPortraitImg || defaultHeadImg; // 默认头像
       }
     };
-
+// 计算属性映射 Vuex 状态
+    const switchState = computed({
+      get: () => store.state.switchState,
+      set: (value) => store.commit('toggleSwitch', value), // 提交 mutation 更新 Vuex 状态
+    });
     const scrollBottom = debounce(() => {
       const scrollDom = chatContent.value;
       animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
@@ -202,6 +213,7 @@ export default {
     };
 
     return {
+      clickToggle,
       chatList,
       inputMsg,
       sendText,
@@ -223,8 +235,57 @@ export default {
   width: 100%;
   height: 100%;
   margin-left: 20px;
+  max-width: 96%;
   position: relative;
+  .switch {
+    width: 60px;
+    height: 34px;
+    position: relative; /* 绝对定位标签 */
 
+  }
+  .switch-container {
+    position: absolute;
+    z-index: 1000;
+    top: 15px; /* 上边界居中 */
+    right: 30px; /* 相对于容器最右边对齐 */
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(200deg, #fbed77, #f0c784); /* Initial background color */
+      transition:  filter 0.4s ease;
+      border-radius: 34px;
+      filter: hue-rotate(0deg); /* Initial filter value */
+      &:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: transform 0.4s ease;
+        border-radius: 50%;
+      }
+    }
+    input:checked + .slider {
+      filter: hue-rotate(220deg); /* Change filter value */
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+  }
   .top {
     margin-bottom: 50px;
 

@@ -3,7 +3,7 @@
     <el-aside width="100px" style="position: fixed; top: 2%;left: 0; height: 60%; z-index: 10;">
       <Nav></Nav>
     </el-aside>
-    <el-main style="margin-left: 100px; top: 5%;">
+    <el-main style="margin-left: 100px; top: 5%; max-width: 96%">
       <router-view/>
     </el-main>
   </el-container>
