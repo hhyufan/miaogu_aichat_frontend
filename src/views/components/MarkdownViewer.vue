@@ -94,10 +94,7 @@ export default {
 <style scoped>
 /* 容器基础样式 */
 .markdown-viewer {
-  width: 100%; /* 改为全宽 */
-  max-width: 70%; /* 保留最大宽度限制 */
-  min-width: 300px; /* 添加最小宽度防止过度收缩 */
-  margin: 0 auto; /* 保持居中 */
+  max-width: 70%;
   font-family: Arial, sans-serif;
   line-height: 1.6;
   padding: 16px;
