@@ -136,9 +136,10 @@ const handleImageError = () => {
 
 
     .showIcon {
-      position: relative;
-      top: calc(50% - 150px); /* 垂直居中 */
-      left: calc(50% - 150px); /* 水平居中 */
+      position: absolute;
+      top: 50%; /* 从父组件顶部开始的百分比 */
+      left: 50%; /* 从父组件左侧开始的百分比 */
+      ;
       transition: all 0.5s ease-in-out;
       .icon-snapchat {
         pointer-events: none;

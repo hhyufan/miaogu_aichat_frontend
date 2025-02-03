@@ -94,10 +94,14 @@ export default {
 <style scoped>
 /* 容器基础样式 */
 .markdown-viewer {
-  max-width: 70%;
+  width: 100%; /* 改为全宽 */
+  max-width: 70%; /* 保留最大宽度限制 */
+  min-width: 300px; /* 添加最小宽度防止过度收缩 */
+  margin: 0 auto; /* 保持居中 */
   font-family: Arial, sans-serif;
   line-height: 1.6;
   padding: 16px;
+  box-sizing: border-box; /* 重要：包含padding在宽度计算中 */
 }
 
 /* 使用 Vue 3 推荐的作用域穿透语法 */
@@ -110,6 +114,11 @@ export default {
   overflow-x: auto;
   position: relative;
   counter-reset: line;
+  max-width: 100%; /* 确保不溢出容器 */
+  width: 100%;
+  box-sizing: border-box; /* 包含padding */
+  white-space: pre-wrap; /* 允许代码换行 */
+  word-wrap: break-word;
 }
 
 .markdown-viewer :deep(.lang-tag) {
