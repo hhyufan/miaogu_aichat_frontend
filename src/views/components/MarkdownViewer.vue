@@ -126,7 +126,10 @@ export default {
 .markdown-viewer :deep(:is(p, h1, h2, h3, h4, h5, h6)){
   text-align: left;
 }
-
+.markdown-viewer :deep(:is(ol, li)){
+  text-align: left;
+  margin-left: 8px;
+}
 /* 增强代码块样式特异性 */
 .markdown-viewer :deep(pre code) {
   display: block;
