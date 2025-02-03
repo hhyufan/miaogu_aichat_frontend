@@ -19,7 +19,7 @@
       <div class="chat-content" ref="chatContent">
         <div v-if="loading">加载中...</div>
         <div v-else>
-          <div class="chat-wrapper" v-for="item in chatList" :key="item.id">
+          <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
             <div class="chat-friend" v-if="item.uid !== 'User'">
               <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
                 <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
@@ -34,11 +34,22 @@
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{userName}}</span>
                 <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
-
               </div>
               <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.msg " />
             </div>
           </div>
+          <div class="chat-wrapper" v-if="isAITyping">
+            <div class="chat-friend">
+              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                <img :src="friendHeadImg" alt=""/>
+                <span>{{friendName}}</span>
+              </div>
+              <div>
+                <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" currentTyping " />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
       <div class="chatInputs">
@@ -97,12 +108,14 @@ export default {
     },
   },
   setup(props) {
+    const isAITyping = ref(false);
     const chatList = ref([]);
     const inputMsg = ref("");
     const chatContent = ref(null);
     const loading = ref(false);
     const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // 初始值为好友头像或默认头像
     const friendName = ref(props.friendInfo.name)
+    const currentTyping = ref("")
     const clickToggle = () => {
       console.log("Switch is now: ", switchState.value);
     };
@@ -127,7 +140,12 @@ export default {
         console.log("滚动到达底部");
       });
     }, 50);
-
+    const scrollBottomWithoutDebounce = () => {
+      const scrollDom = chatContent.value;
+      animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
+        console.log("滚动到达底部");
+      });
+    }
     const getFriendChatMsg = () => {
       loading.value = true;
       let params = {
@@ -155,8 +173,7 @@ export default {
         // 获取当前时间并格式化
         let now = new Date(); // 获取当前时间
         now.setHours(now.getHours() + 8);
-        const formattedTime = now.toISOString().slice(0, 19).replace("T", " ")  // 格式化为 "yyyy-MM-dd HH:mm:ss"
-
+        const formattedTime = now.toISOString().slice(0, 19).replace("T", " ");  // 格式化为 "yyyy-MM-dd HH:mm:ss"
         let chatMsg = {
           time: formattedTime, // 使用格式化后的时间
           msg: inputMsg.value, // 用户输入的消息
@@ -165,35 +182,54 @@ export default {
 
         let AIChatMsg = {
           time: formattedTime, // 使用格式化后的时间
-          msg: null, // 用户输入的消息
+          msg: "", // 初始为空，后续逐字填充
           uid: "AI" // 用户 ID
-        }
+        };
+
         chatList.value.push(chatMsg); // 更新聊天列表
         inputMsg.value = ""; // 清空输入框
         nextTick(() => {
           scrollBottom(); // 滚动到底部
         });
+
         // 调用 sendChatMessage API
         sendChatMessage(chatMsg, props.friendInfo.id)
             .then(response => {
               if (response.code === 200) {
                 // 如果发送成功，将消息添加到聊天记录
+                isAITyping.value = true;
+                const responseData = response.data;
+                let index = 0;
 
-                AIChatMsg.msg = response.data
-                chatList.value.push(AIChatMsg);
-                nextTick(() => {
-                  scrollBottom(); // 滚动到底部
-                });
+                const typeMessage = () => {
+                  nextTick(() => {
+                    scrollBottom(); // 滚动到底部
+                  });
+                  if (index < responseData.length) {
+                    AIChatMsg.msg += responseData.charAt(index);
+                    currentTyping.value = AIChatMsg.msg;
+                    index++;
+                    scrollBottomWithoutDebounce()
+                    setTimeout(typeMessage, 50); // 每50毫秒输出一个字符
+                  } else {
+                    isAITyping.value = false;
+                    chatList.value.push(AIChatMsg);
+                    nextTick(() => {
+                      scrollBottom(); // 滚动到底部
+                    });
+                  }
+                };
 
+                typeMessage(); // 开始逐字打印
               } else {
-                toast.error("发送消息失败", {error: response.msg})
+                toast.error("发送消息失败", { error: response.msg });
               }
             })
             .catch(error => {
-              toast.error("发送消息时出错",{error});
+              toast.error("发送消息时出错", { error });
             });
       } else {
-        toast.warning("消息不能为空哦~", {closable: true, duration: 2000, debounce: 2500})
+        toast.warning("消息不能为空哦~", { closable: true, duration: 2000, debounce: 2500 });
       }
     };
 
@@ -213,6 +249,8 @@ export default {
     };
 
     return {
+      isAITyping,
+      currentTyping,
       clickToggle,
       chatList,
       inputMsg,
