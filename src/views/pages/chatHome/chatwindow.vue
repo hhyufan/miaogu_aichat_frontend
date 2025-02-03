@@ -419,7 +419,7 @@ export default {
 
           .chat-text {
             max-width: 90%;
-            border-radius: 20px 20px 20px 5px;
+            border-radius: 5px 20px 20px 20px;
             background-color: rgba(255, 255, 255, 0.7);
 
           }
@@ -451,7 +451,7 @@ export default {
 
           .chat-text {
             max-width: 90%;
-            border-radius: 20px 20px 5px 20px;
+            border-radius: 20px 5px 20px 20px;
             background-color: rgba(255, 255, 255, 0.7);
           }
 
