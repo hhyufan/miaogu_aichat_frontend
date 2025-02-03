@@ -19,16 +19,18 @@
                 <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{friendName}}</span>
+
               </div>
-              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]">{{ item.msg }}</div>
+              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.msg " />
             </div>
             <div class="chat-me" v-else>
               <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{userName}}</span>
                 <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
+
               </div>
-              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]">{{ item.msg }}</div>
+              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.msg " />
             </div>
           </div>
         </div>
@@ -74,11 +76,13 @@ import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
 import store from "@/vuex/store.js";
 import {toast} from "@/plugins/toast.js";
+import MarkdownViewer from "@/views/components/MarkdownViewer.vue";
 const switchState = computed(() => store.state.switchState);
 const userName = computed(() => store.state.UserName);
 
 export default {
   components: {
+    MarkdownViewer,
     HeadPortrait
   },
   props: {
