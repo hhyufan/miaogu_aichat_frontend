@@ -40,7 +40,7 @@ export default {
   font-family: Arial, sans-serif;
   line-height: 1.6;
   max-width: 800px;
-  padding: 20px;
+  padding: 16px;
 }
 
 /* 使用 Vue 3 推荐的作用域穿透语法 */
