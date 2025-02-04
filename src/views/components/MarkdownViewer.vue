@@ -95,7 +95,7 @@ export default {
 /* 容器基础样式 */
 .markdown-viewer {
   max-width: 70%;
-  font-family: Arial, sans-serif;
+  font-family: 'PingFang SC',  sans-serif;
   line-height: 1.6;
   padding: 16px;
   box-sizing: border-box; /* 重要：包含padding在宽度计算中 */
@@ -104,7 +104,7 @@ export default {
 /* 使用 Vue 3 推荐的作用域穿透语法 */
 .markdown-viewer :deep(pre) {
   margin: 24px 0 !important; /* 强制覆盖默认 margin */
-  font-family: Arial, sans-serif !important; /* 覆盖 monospace */
+  font-family: 'JetBrains Mono', monospace !important;
   background-color: #ffffff !important;
   padding: 12px;
   border-radius: 12px;
@@ -141,6 +141,7 @@ export default {
 .markdown-viewer :deep(pre code) {
   display: block;
   padding: 1em;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 14px;
   line-height: 1.5;
   background: transparent !important; /* 确保 hljs 主题透明 */
