@@ -49,7 +49,19 @@
               </div>
             </div>
           </div>
-
+          <div class="chat-wrapper" v-if="isBeforeTyping">
+            <div class="chat-friend">
+              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                <img :src="friendHeadImg" alt=""/>
+                <span>{{friendName}}</span>
+              </div>
+              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]"  >
+                <div class= 'loader' >
+                  <span class="load" :class="[`load${switchState ? 'A' : 'B'}`]"></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="chatInputs">
@@ -108,6 +120,7 @@ export default {
     },
   },
   setup(props) {
+    const isBeforeTyping = ref(false);
     const isAITyping = ref(false);
     const chatList = ref([]);
     const inputMsg = ref("");
@@ -168,7 +181,7 @@ export default {
             loading.value = false;
           });
     };
-    const sendText = () => {
+    const sendText = async () => {
       if (inputMsg.value) {
         // 获取当前时间并格式化
         let now = new Date(); // 获取当前时间
@@ -188,17 +201,18 @@ export default {
 
         chatList.value.push(chatMsg); // 更新聊天列表
         inputMsg.value = ""; // 清空输入框
-        nextTick(() => {
+        await nextTick(() => {
           scrollBottom(); // 滚动到底部
         });
-
+        isBeforeTyping.value = true;
         // 调用 sendChatMessage API
-        sendChatMessage(chatMsg, props.friendInfo.id)
+        await sendChatMessage(chatMsg, props.friendInfo.id)
             .then(response => {
               if (response.code === 200) {
                 // 如果发送成功，将消息添加到聊天记录
                 isAITyping.value = true;
                 const responseData = response.data;
+                isBeforeTyping.value = false;
                 let index = 0;
 
                 const typeMessage = () => {
@@ -222,14 +236,14 @@ export default {
 
                 typeMessage(); // 开始逐字打印
               } else {
-                toast.error("发送消息失败", { error: response.msg });
+                toast.error("发送消息失败", {error: response.msg});
               }
             })
             .catch(error => {
-              toast.error("发送消息时出错", { error });
+              toast.error("发送消息时出错", {error});
             });
       } else {
-        toast.warning("消息不能为空哦~", { closable: true, duration: 2000, debounce: 2500 });
+        await toast.warning("消息不能为空哦~", {closable: true, duration: 2000, debounce: 2500});
       }
     };
 
@@ -249,6 +263,7 @@ export default {
     };
 
     return {
+      isBeforeTyping,
       isAITyping,
       currentTyping,
       clickToggle,
@@ -421,7 +436,98 @@ export default {
             max-width: 90%;
             border-radius: 5px 20px 20px 20px;
             background-color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            min-height: 50px;
+            min-width: 90px;
+            .loader {
+              position: absolute;
+              width: 90%;
+              height: 100%;
+              left: 5%;
+              top: 35%;
+              .loadA {
+                background-color: #9A79FF;
+              }
+              .loadB {
+                background-color: #fbd26c;
+              }
 
+              .load {
+
+                border-radius: 50px;
+                height: 16px;
+                width: 16px;
+                position: absolute;
+                animation: loading_713 3.5s ease both infinite;
+                &.loadA::before {
+                  background-color: #D1C2FF; // switchState为true时的颜色
+                }
+                &.loadB::before {
+                  background-color: #f6eba4; // switchState为false时的颜色（示例颜色，按需调整）
+                }
+                &::before {
+                  content: "";
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  background-color: #D1C2FF;
+                  border-radius: inherit;
+                  animation: loading2_713 3.5s ease both infinite;
+                }
+              }
+            }
+
+            // 修改动画关键帧
+            @keyframes loading_713 {
+              0% {
+                width: 16px;
+                left: 50%;  // 保持居中定位
+                transform: translateX(-50%);
+              }
+              40% {
+                width: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+              }
+              80% {
+                width: 16px;
+                left: 100%;  // 移动到右侧边界
+                transform: translateX(calc(-100% - 16px)); // 保持圆形完整显示
+              }
+              90% {
+                width: 100%;
+                left: 0;
+                transform: translateX(0);
+              }
+              100% {
+                width: 16px;
+                left: 50%;
+                transform: translateX(-50%);
+              }
+            }
+
+            @keyframes loading2_713 {
+              0% {
+                transform: translateX(0);
+                width: 16px;
+              }
+              40% {
+                transform: translateX(0);
+                width: 80%;
+              }
+              80% {
+                width: 100%;
+                transform: translateX(0);
+              }
+              90% {
+                width: 80%;
+                transform: translateX(15px);
+              }
+              100% {
+                transform: translateX(0);
+                width: 16px;
+              }
+            }
           }
 
 
