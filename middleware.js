@@ -1,4 +1,4 @@
-export const config = { matcher: '/((?!api|static|.*\\..*|_next).*)' };
+export const config = { matcher: '/((?!api|.*\\..*|_next).*)' };
 
 export function middleware(req) {
     const url = new URL(req.url);
