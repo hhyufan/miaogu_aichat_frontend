@@ -18,20 +18,4 @@ import store from "@/vuex/store.js";
 const switchState = computed(() => store.state.switchState);
 </script>
 
-<style lang="scss" scoped>
-.home-colorA {
-  background: linear-gradient(200deg, rgb(249, 248, 251), rgb(222, 213, 246));
-}
-.home-colorB {
-  background: linear-gradient(200deg, rgb(249, 248, 251), rgb(243, 246, 208));
-}
-.home {
-    width: 90vw;
-    height: 90vh;
-    border-radius: 15px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-</style>
+<style lang="scss" scoped src="./home.scss"/>

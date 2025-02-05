@@ -1,0 +1,87 @@
+.person-card {
+  width: 250px;
+  height: 80px;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  margin: 25px 0;
+  cursor: pointer;
+
+  .info {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 90%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    display: flex;
+
+    .info-detail {
+      margin-top: 5px;
+      margin-left: 20px;
+      .name-colorA {
+        color: #9374ef;
+      }
+      .name-colorB {
+        color: #f0fb6c;
+      }
+      .name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin-bottom: 5px;
+      }
+
+      .detail {
+        color: #75757c;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 12px;
+      }
+    }
+  }
+
+  &.hover-a:hover {
+    background-color: rgb(168, 145, 236);
+    box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+  }
+
+  &.hover-b:hover {
+    background-color: rgb(255, 214, 153);
+    box-shadow: 0 0 10px 0 rgb(246, 209, 124);
+  }
+
+  &:hover {
+    transition: 0.3s;
+    .info {
+      .info-detail {
+        .detail {
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.active-cardA {
+  background-color: rgb(168, 145, 236);
+  box-shadow: 0 0 10px 0 rgb(111, 81, 209);
+}
+
+.active-cardB {
+  background-color: rgb(255, 214, 153);
+  box-shadow: 0 0 10px 0 rgb(246, 209, 124);
+}
+
+.activeCard {
+
+  transition: 0.3s;
+  .info {
+    .info-detail {
+      .detail {
+        color: #fff;
+      }
+    }
+  }
+}

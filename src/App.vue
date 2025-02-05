@@ -59,4 +59,5 @@ import Home from './views/home.vue';
 .toast-error { background: #ef4444; color: white; }
 .toast-success { background: #10b981; color: white; }
 .toast-warning { background: #f59e0b; color: white; }
+
 </style>

@@ -1,0 +1,80 @@
+$font-family-default: 'PingFang SC', sans-serif;
+$font-family-mono: 'JetBrains Mono', monospace;
+$color-custom-codeA-bg: #bfb2f6;
+$color-custom-codeA-text: #896cda;
+$color-custom-codeB-bg: #eff89b;
+$color-custom-codeB-text: #f0c784;
+$color-lang-tag: rgba(255, 255, 255, 0.8);
+$color-text: #666;
+
+.markdown-viewer {
+  max-width: 70%;
+  font-family: $font-family-default;
+  line-height: 1.6;
+  padding: 16px;
+  box-sizing: border-box;
+
+
+  :deep(.custom-inline-codeA) {
+    background-color: $color-custom-codeA-bg;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: $font-family-default;
+    color: $color-custom-codeA-text;
+}
+
+  :deep(.custom-inline-codeB) {
+    background-color: $color-custom-codeB-bg;
+    color: $color-custom-codeB-text;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: $font-family-default;
+}
+
+
+  :deep(pre) {
+    margin: 24px 0 !important;
+    font-family: $font-family-mono !important;
+    background-color: #ffffff !important;
+    padding: 12px;
+    border-radius: 12px;
+    overflow-x: auto;
+    position: relative;
+    counter-reset: line;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    code {
+      display: block;
+      padding: 1em;
+      font-family: $font-family-mono !important;
+      font-size: 14px;
+      line-height: 1.5;
+      background: transparent !important;
+  }
+}
+
+  :deep(.lang-tag) {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    color: $color-text;
+    font-size: 0.8em;
+    background: $color-lang-tag;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+  :deep(:is(p, h1, h2, h3, h4, h5, h6)) {
+    text-align: left;
+    margin: 0 !important;
+}
+
+  :deep(:is(ol, li)) {
+    text-align: left;
+    margin-left: 8px;
+}
+}
