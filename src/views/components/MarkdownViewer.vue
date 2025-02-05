@@ -6,6 +6,9 @@
 import {marked} from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
+import {computed} from "vue";
+import store from "@/vuex/store.js";
+const switchState = computed(() => store.state.switchState);
 
 export default {
   props: {
@@ -16,6 +19,11 @@ export default {
   },
   computed: {
     processedMarkdown() {
+      const renderer = new marked.Renderer();
+      renderer.codespan = (code) => {
+        return `<code class="custom-inline-code${switchState.value ? 'A': 'B'}">${code.text}</code>`;
+      };
+      marked.setOptions({ renderer });
       return marked(this.markdown);
     },
   },
@@ -93,6 +101,20 @@ export default {
 };
 </script>
 <style scoped>
+.markdown-viewer :deep(.custom-inline-codeA) {
+  background-color: #ac9ae4; /* 自定义背景色 */
+  padding: 2px 4px; /* 内边距 */
+  border-radius: 3px; /* 圆角 */
+  font-family: 'PingFang SC',  sans-serif;
+  color: #6f51d1;
+}
+.markdown-viewer :deep(.custom-inline-codeB) {
+  background-color: #eff89b; /* 自定义背景色 */
+  color: #f0c784;
+  padding: 2px 4px; /* 内边距 */
+  border-radius: 3px; /* 圆角 */
+  font-family: 'PingFang SC',  sans-serif;
+}
 /* 容器基础样式 */
 .markdown-viewer {
   max-width: 70%;
