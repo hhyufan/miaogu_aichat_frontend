@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@types/highlight.js": "^10.1.0",
     "axios": "^1.7.9",
     "element-plus": "^2.9.1",
