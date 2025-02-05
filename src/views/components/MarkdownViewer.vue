@@ -102,11 +102,11 @@ export default {
 </script>
 <style scoped>
 .markdown-viewer :deep(.custom-inline-codeA) {
-  background-color: #ac9ae4; /* 自定义背景色 */
+  background-color: #bfb2f6; /* 自定义背景色 */
   padding: 2px 4px; /* 内边距 */
   border-radius: 3px; /* 圆角 */
   font-family: 'PingFang SC',  sans-serif;
-  color: #6f51d1;
+  color: #896cda;
 }
 .markdown-viewer :deep(.custom-inline-codeB) {
   background-color: #eff89b; /* 自定义背景色 */
