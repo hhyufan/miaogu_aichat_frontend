@@ -29,6 +29,7 @@ export default {
     highlightCode() {
       this.$nextTick(() => {
         hljs.highlightAll();
+        hljs.registerLanguage("vue",() =>  hljs.getLanguage("html"))
         this.addLanguageLabels();
       });
     },
