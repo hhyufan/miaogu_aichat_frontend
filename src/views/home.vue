@@ -9,24 +9,13 @@
   </el-container>
 </template>
 
-<script>
-import {computed, defineComponent} from 'vue';
+<script setup>
+import { computed } from 'vue';
 import Nav from "@/views/components/Nav.vue";
 import store from "@/vuex/store.js";
 
-
-export default defineComponent({
-    name: "App",
-    setup() {
-      const switchState = computed(() => store.state.switchState);
-      return {
-      switchState
-    }
-  },
-    components: {
-        Nav,
-    },
-});
+// Computed property for switchState
+const switchState = computed(() => store.state.switchState);
 </script>
 
 <style lang="scss" scoped>

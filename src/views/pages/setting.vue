@@ -87,7 +87,7 @@
           </div>
 
           <div class="button-container">
-            <button class="logout-button" @click="logout">
+            <button class="logout-button" @click="exit">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
                 <path
                     d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
@@ -104,89 +104,84 @@
     </div>
   </div>
 </template>
-
-<script>
-import { defineComponent } from 'vue';
-import {clearChatMsg, rollbackChatMsg, getRepoStarCount, logout} from "@/api/getData.js";
+<script setup>
+import { computed, onMounted } from 'vue';
+import { clearChatMsg, rollbackChatMsg, getRepoStarCount, logout } from "@/api/getData.js";
 import { toast } from "@/plugins/toast.js";
 import store from "../../vuex/store.js";
-export default defineComponent({
-  computed: {
-    store() {
-      return store
-    }
-  },
-  created() {
-    getRepoStarCount("hhyufan", "miaogu_aichat_frontend")
-  },
-  data() {
-    return {
-      userInfo: store.state.userInfo
-    };
-  },
-  methods: {
-    async rollbackChat() {
-      const confirmed = confirm("确定要回滚到上次保存的聊天记录吗？此操作不可逆。");
-      if (!confirmed) {
-        await toast.warning("操作已取消", { closable: true });
-        return;
-      }
 
-      try {
-        const response = await rollbackChatMsg();
-        if (response.code === 200) {
-          await toast.success("成功恢复聊天记录！", { closable: true });
-        } else {
-          await toast.error("回滚操作失败");
-        }
-      } catch (error) {
-        await toast.error("回滚过程中发生错误");
-        console.error("Rollback error:", error);
-      }
-    },
-    clearChat() {
-      const confirmed = confirm("您确定要删除所有聊天记录吗？此操作不可逆。");
-      if (confirmed) {
-        clearChatMsg()
-            .then(response => {
-              if (response.code === 204) {
-                toast.success("聊天记录已清空", { closable: true });
-              } else {
-                toast.error("清空聊天记录失败！");
-              }
-            })
-            .catch(error => {
-              toast.error("清空聊天记录时发生错误！", error);
-            });
-      } else {
-        toast.warning("操作已取消", { closable: true });
-      }
-    },
-    openGithub() {
-      window.open('https://github.com/hhyufan/miaogu_aichat_frontend', '_blank')
-    },
-    logout() {
-      const confirmed = confirm("您确定要退出当前账号？");
-      if (confirmed) {
-        logout()
-          .then(response => {
-            if (response.code === 200) {
-              toast.success("退出账号成功")
-              setTimeout(
-                  () => window.location.href = "/",
-                  1500
-              )
-            }
-          }).catch(error => {
-          toast.error("退出账号时发生错误！", error);
-        })
-      } else {
-        toast.warning("操作已取消", { closable: true });
-      }
+// Reactive reference for userInfo from the store
+const userInfo = computed(() => store.state.userInfo);
 
-    }
-  }
+// Lifecycle hook to fetch repo star count when the component is created
+onMounted(() => {
+  getRepoStarCount("hhyufan", "miaogu_aichat_frontend");
 });
+
+// Method to rollback chat messages
+const rollbackChat = async () => {
+  const confirmed = confirm("确定要回滚到上次保存的聊天记录吗？此操作不可逆。");
+  if (!confirmed) {
+    await toast.warning("操作已取消", { closable: true });
+    return;
+  }
+
+  try {
+    const response = await rollbackChatMsg();
+    if (response.code === 200) {
+      await toast.success("成功恢复聊天记录！", { closable: true });
+    } else {
+      await toast.error("回滚操作失败");
+    }
+  } catch (error) {
+    await toast.error("回滚过程中发生错误");
+    console.error("Rollback error:", error);
+  }
+};
+
+// Method to clear chat messages
+const clearChat = () => {
+  const confirmed = confirm("您确定要删除所有聊天记录吗？此操作不可逆。");
+  if (confirmed) {
+    clearChatMsg()
+        .then(response => {
+          if (response.code === 204) {
+            toast.success("聊天记录已清空", { closable: true });
+          } else {
+            toast.error("清空聊天记录失败！");
+          }
+        })
+        .catch(error => {
+          toast.error("清空聊天记录时发生错误！", error);
+        });
+  } else {
+    toast.warning("操作已取消", { closable: true });
+  }
+};
+
+// Method to open GitHub repository
+const openGithub = () => {
+  window.open('https://github.com/hhyufan/miaogu_aichat_frontend', '_blank');
+};
+
+// Method for logging out
+const exit = () => {
+  const confirmed = confirm("您确定要退出当前账号？");
+  if (confirmed) {
+    logout()
+        .then(response => {
+          if (response.code === 200) {
+            toast.success("退出账号成功");
+            setTimeout(() => (window.location.href = "/"), 1500);
+          }
+        })
+        .catch(error => {
+          toast.error("退出账号时发生错误！", error);
+        });
+  } else {
+    toast.warning("操作已取消", { closable: true });
+  }
+};
 </script>
 
 <style scoped>

@@ -93,194 +93,176 @@
     </div>
   </div>
 </template>
-
-<script>
-import {ref, onMounted, watch, nextTick, computed} from 'vue';
-import { animation, debounce } from "@/util/util"; // 引入防抖函数
-import {getChatMsg, sendChatMessage} from "@/api/getData";
+<script setup>
+import { ref, onMounted, watch, nextTick, computed } from 'vue';
+import { animation, debounce } from "@/util/util"; // Import debounce function
+import { getChatMsg, sendChatMessage } from "@/api/getData";
 import HeadPortrait from "@/views/components/HeadPortrait.vue";
-import headPortraitImg from "@/assets/img/head_portrait.jpg"; // 使用 import 导入图片
-import defaultHeadImg from '@/assets/icons/user-icon.svg'; // 导入默认头像
-import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
-import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
-import store from "@/vuex/store.js";
-import {toast} from "@/plugins/toast.js";
-import MarkdownViewer from "@/views/components/MarkdownViewer.vue";
+import headPortraitImg from "@/assets/img/head_portrait.jpg"; // Import default head image
+import defaultHeadImg from '@/assets/icons/user-icon.svg'; // Import default avatar
+import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // Import avatar for GPT3_5
+import avatarGPT4 from "@/assets/img/head_portrait2.jpg"; // Import avatar for GPT4
+import store from "@/vuex/store.js"; // Import Vuex store
+import { toast } from "@/plugins/toast.js"; // Import toast notifications
+import MarkdownViewer from "@/views/components/MarkdownViewer.vue"; // Import MarkdownViewer component
+
+// Define props
+const props = defineProps({
+  friendInfo: {
+    type: Object,
+    required: true,
+  },
+});
+
+// Computed property for username
 const userName = computed(() => store.state.UserName);
 
-export default {
-  components: {
-    MarkdownViewer,
-    HeadPortrait
-  },
-  props: {
-    friendInfo: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup(props) {
-    const isBeforeTyping = ref(false);
-    const isAITyping = ref(false);
-    const chatList = ref([]);
-    const inputMsg = ref("");
-    const chatContent = ref(null);
-    const loading = ref(false);
-    const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // 初始值为好友头像或默认头像
-    const friendName = ref(props.friendInfo.name)
-    const currentTyping = ref("")
-    const clickToggle = () => {
-      console.log("Switch is now: ", switchState.value);
-    };
-    const getAvatar = (uid) => {
-      switch (uid) {
-        case '1002':
-          return avatarGPT3_5; // 返回 GPT3_5 的头像
-        case '1003':
-          return avatarGPT4; // 返回 GPT4 的头像
-        default:
-          return headPortraitImg || defaultHeadImg; // 默认头像
-      }
-    };
-// 计算属性映射 Vuex 状态
-    const switchState = computed({
-      get: () => store.state.switchState,
-      set: (value) => store.commit('toggleSwitch', value), // 提交 mutation 更新 Vuex 状态
-    });
-    const scrollBottom = debounce(() => {
-      const scrollDom = chatContent.value;
-      animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
-        console.log("滚动到达底部");
-      });
-    }, 50);
-    const scrollBottomWithoutDebounce = () => {
-      const scrollDom = chatContent.value;
-      animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
-        console.log("滚动到达底部");
-      });
-    }
-    const getFriendChatMsg = () => {
-      loading.value = true;
-      let params = {
-        friendId: props.friendInfo.id,
-      };
-      if (!props.friendInfo.id) return;
+// Reactive references
+const isBeforeTyping = ref(false);
+const isAITyping = ref(false);
+const chatList = ref([]);
+const inputMsg = ref("");
+const chatContent = ref(null);
+const loading = ref(false);
+const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // Initial value for friend's avatar
+const friendName = ref(props.friendInfo.name);
+const currentTyping = ref("");
 
-      getChatMsg(params, props.friendInfo.id)
-          .then((res) => {
-            chatList.value = res.data;
-            nextTick(() => {
-              scrollBottom();
-            });
-          })
-          .catch((error) => {
-            chatList.value = ""
-            console.error('Failed to fetch chat messages:', {error});
-          })
-          .finally(() => {
-            loading.value = false;
-          });
-    };
-    const sendText = async () => {
-      if (inputMsg.value) {
-        // 获取当前时间并格式化
-        let now = new Date(); // 获取当前时间
-        now.setHours(now.getHours() + 8);
-        const formattedTime = now.toISOString().slice(0, 19).replace("T", " ");  // 格式化为 "yyyy-MM-dd HH:mm:ss"
-        let chatMsg = {
-          time: formattedTime, // 使用格式化后的时间
-          msg: inputMsg.value, // 用户输入的消息
-          uid: "User" // 用户 ID
-        };
-
-        let AIChatMsg = {
-          time: formattedTime, // 使用格式化后的时间
-          msg: "", // 初始为空，后续逐字填充
-          uid: "AI" // 用户 ID
-        };
-
-        chatList.value.push(chatMsg); // 更新聊天列表
-        inputMsg.value = ""; // 清空输入框
-        await nextTick(() => {
-          scrollBottom(); // 滚动到底部
-        });
-        isBeforeTyping.value = true;
-        // 调用 sendChatMessage API
-        await sendChatMessage(chatMsg, props.friendInfo.id)
-            .then(response => {
-              if (response.code === 200) {
-                // 如果发送成功，将消息添加到聊天记录
-                isAITyping.value = true;
-                const responseData = response.data;
-                isBeforeTyping.value = false;
-                let index = 0;
-
-                const typeMessage = () => {
-                  nextTick(() => {
-                    scrollBottom(); // 滚动到底部
-                  });
-                  if (index < responseData.length) {
-                    AIChatMsg.msg += responseData.charAt(index);
-                    currentTyping.value = AIChatMsg.msg;
-                    index++;
-                    scrollBottomWithoutDebounce()
-                    setTimeout(typeMessage, 50); // 每50毫秒输出一个字符
-                  } else {
-                    isAITyping.value = false;
-                    chatList.value.push(AIChatMsg);
-                    nextTick(() => {
-                      scrollBottom(); // 滚动到底部
-                    });
-                  }
-                };
-
-                typeMessage(); // 开始逐字打印
-              } else {
-                toast.error("发送消息失败", {error: response.msg});
-              }
-            })
-            .catch(error => {
-              toast.error("发送消息时出错", {error});
-            });
-      } else {
-        await toast.warning("消息不能为空哦~", {closable: true, duration: 2000, debounce: 2500});
-      }
-    };
-
-    onMounted(() => {
-      getFriendChatMsg();
-    });
-
-    watch(() => props.friendInfo, () => {
-      friendName.value = props.friendInfo.name
-      friendHeadImg.value = getAvatar(props.friendInfo.id) || defaultHeadImg; // 更新头像
-      getFriendChatMsg();
-    });
-
-    const handleImageError = (item) => {
-      console.error("Failed to load image for:", item);
-      item.headImg = defaultHeadImg; // 设置为默认头像
-    };
-
-    return {
-      isBeforeTyping,
-      isAITyping,
-      currentTyping,
-      clickToggle,
-      chatList,
-      inputMsg,
-      sendText,
-      chatContent,
-      loading,
-      friendHeadImg,
-      headPortraitImg,
-      handleImageError,
-      userName,
-      friendName,
-      switchState
-    };
+// Function to get avatar based on uid
+const getAvatar = (uid) => {
+  switch (uid) {
+    case '1002':
+      return avatarGPT3_5; // Return GPT3_5 avatar
+    case '1003':
+      return avatarGPT4; // Return GPT4 avatar
+    default:
+      return headPortraitImg || defaultHeadImg; // Default avatar
   }
 };
+
+// Computed property for switch state
+const switchState = computed({
+  get: () => store.state.switchState,
+  set: (value) => store.commit('toggleSwitch', value), // Commit mutation to update Vuex state
+});
+
+// Function to scroll to the bottom of chat
+const scrollBottom = debounce(() => {
+  const scrollDom = chatContent.value;
+  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
+    console.log("Scrolled to bottom");
+  });
+}, 50);
+
+// Function to fetch friend's chat messages
+const getFriendChatMsg = () => {
+  loading.value = true;
+  const params = {
+    friendId: props.friendInfo.id,
+  };
+  if (!props.friendInfo.id) return;
+
+  getChatMsg(params, props.friendInfo.id)
+      .then((res) => {
+        chatList.value = res.data;
+        nextTick(() => {
+          scrollBottom();
+        });
+      })
+      .catch((error) => {
+        chatList.value = "";
+        console.error('Failed to fetch chat messages:', { error });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+};
+
+// Function to send text message
+const sendText = async () => {
+  if (inputMsg.value) {
+    const now = new Date();
+    now.setHours(now.getHours() + 8);
+    const formattedTime = now.toISOString().slice(0, 19).replace("T", " "); // Format time
+
+    const chatMsg = {
+      time: formattedTime,
+      msg: inputMsg.value,
+      uid: "User", // User ID
+    };
+
+    const AIChatMsg = {
+      time: formattedTime,
+      msg: "",
+      uid: "AI", // AI ID
+    };
+
+    chatList.value.push(chatMsg);
+    inputMsg.value = ""; // Clear input
+    await nextTick(() => {
+      scrollBottom();
+    });
+    isBeforeTyping.value = true;
+
+    // Call sendChatMessage API
+    await sendChatMessage(chatMsg, props.friendInfo.id)
+        .then(response => {
+          if (response.code === 200) {
+            isAITyping.value = true;
+            const responseData = response.data;
+            isBeforeTyping.value = false;
+            let index = 0;
+
+            const typeMessage = () => {
+              nextTick(() => {
+                scrollBottom();
+              });
+              if (index < responseData.length) {
+                AIChatMsg.msg += responseData.charAt(index);
+                currentTyping.value = AIChatMsg.msg;
+                index++;
+                scrollBottom();
+                setTimeout(typeMessage, 50); // Type character by character
+              } else {
+                isAITyping.value = false;
+                chatList.value.push(AIChatMsg);
+                nextTick(() => {
+                  scrollBottom();
+                });
+              }
+            };
+
+            typeMessage();
+          } else {
+            toast.error("Failed to send message", { error: response.msg });
+          }
+        })
+        .catch(error => {
+          toast.error("Error sending message", { error });
+        });
+  } else {
+    await toast.warning("Message cannot be empty~", { closable: true, duration: 2000, debounce: 2500 });
+  }
+};
+
+// Lifecycle hook to fetch messages on mount
+onMounted(() => {
+  getFriendChatMsg();
+});
+
+// Watch for changes in friendInfo
+watch(() => props.friendInfo, () => {
+  friendName.value = props.friendInfo.name;
+  friendHeadImg.value = getAvatar(props.friendInfo.id) || defaultHeadImg; // Update avatar
+  getFriendChatMsg();
+});
+
+// Handle image loading error
+const handleImageError = (item) => {
+  console.error("Failed to load image for:", item);
+  item.headImg = defaultHeadImg; // Set to default avatar
+};
+
 </script>
 
 <style lang="scss" scoped>

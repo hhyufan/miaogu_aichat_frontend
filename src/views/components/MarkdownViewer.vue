@@ -2,102 +2,103 @@
   <div class="markdown-viewer" v-html="processedMarkdown"></div>
 </template>
 
-<script>
-import {marked} from 'marked';
+<script setup>
+import { computed, onMounted, onUpdated, nextTick} from 'vue';
+import { marked } from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import {computed} from "vue";
 import store from "@/vuex/store.js";
+
+// Props
+const props = defineProps({
+  markdown: {
+    type: String,
+    required: true,
+  },
+});
+
+// Computed
 const switchState = computed(() => store.state.switchState);
 
-export default {
-  props: {
-    markdown: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    processedMarkdown() {
-      const renderer = new marked.Renderer();
-      renderer.codespan = (code) => {
-        return `<code class="custom-inline-code${switchState.value ? 'A': 'B'}">${code.text}</code>`;
-      };
-      marked.setOptions({ renderer });
-      return marked(this.markdown);
-    },
-  },
-  mounted() {
-    this.highlightCode();
-  },
-  updated() {
-    this.highlightCode();
-  },
-  methods: {
-    highlightCode() {
-      this.$nextTick(() => {
-        hljs.highlightAll();
-        hljs.registerLanguage("vue",() =>  hljs.getLanguage("html"))
-        this.addLanguageLabels();
-      });
-    },
-    addLanguageLabels() {
-      // 语言名称映射表（小写键 => 显示名称）
-      const LANGUAGE_DISPLAY_MAP = {
-        html: 'HTML',
-        xml: 'XML',
-        sql: 'SQL',
-        css: 'css',
-        sass: 'sass',
-        scss: 'sass',
-        js: 'JavaScript',
-        ts: 'TypeScript',
-        py: 'Python',
-        php: 'PHP',
-        md: 'Markdown',
-        yml: 'YAML',
-        yaml: 'YAML',
-        json: 'JSON',
-        rb: 'Ruby'
-      };
+const processedMarkdown = computed(() => {
+  const renderer = new marked.Renderer();
+  renderer.codespan = (code) => {
+    return `<code class="custom-inline-code${switchState.value ? 'A' : 'B'}">${code.text}</code>`;
+  };
+  marked.setOptions({ renderer });
+  return marked(props.markdown);
+});
 
-      const codeBlocks = this.$el.querySelectorAll('code');
+// Lifecycle Hooks
+onMounted(() => {
+  highlightCode();
+});
 
-      codeBlocks.forEach(code => {
-        const pre = code.closest('pre');
-        if (!pre) return;
+onUpdated(() => {
+  highlightCode();
+});
 
-        // 清理旧标签
-        pre.querySelector('.lang-tag')?.remove();
+// Methods
+const highlightCode = () => {
+  nextTick(() => {
+    hljs.highlightAll();
+    hljs.registerLanguage("vue", () => hljs.getLanguage("html"));
+    addLanguageLabels();
+  });
+};
 
-        // 提取语言类型（统一转小写处理）
-        const langClass = [...code.classList].find(c => c.startsWith('language-'));
-        const rawLang = langClass ? langClass.split('-')[1] || '' : '';
-        const langKey = rawLang.toLowerCase();
+const addLanguageLabels = () => {
+  const LANGUAGE_DISPLAY_MAP = {
+    html: 'HTML',
+    xml: 'XML',
+    sql: 'SQL',
+    css: 'CSS',
+    sass: 'Sass',
+    scss: 'Sass',
+    js: 'JavaScript',
+    ts: 'TypeScript',
+    py: 'Python',
+    php: 'PHP',
+    md: 'Markdown',
+    yml: 'YAML',
+    yaml: 'YAML',
+    json: 'JSON',
+    rb: 'Ruby'
+  };
 
-        // 获取显示名称
-        let displayLang = LANGUAGE_DISPLAY_MAP[langKey];
+  const codeBlocks = document.querySelectorAll('code');
 
-        // 未定义的特殊情况处理
-        if (!displayLang) {
-          // 处理带版本号的情况：python3 → Python 3
-          const versionMatch = langKey.match(/^(\D+)(\d+)$/);
-          if (versionMatch) {
-            displayLang = `${versionMatch[1].charAt(0).toUpperCase()}${versionMatch[1].slice(1)} ${versionMatch[2]}`;
-          } else {
-            // 默认首字母大写
-            displayLang = langKey.charAt(0).toUpperCase() + langKey.slice(1);
-          }
-        }
+  codeBlocks.forEach(code => {
+    const pre = code.closest('pre');
+    if (!pre) return;
 
-        // 创建标签
-        const tag = document.createElement('div');
-        tag.className = 'lang-tag';
-        tag.textContent = displayLang;
-        pre.appendChild(tag);
-      });
+    // Clear old labels
+    pre.querySelector('.lang-tag')?.remove();
+
+    // Extract language type
+    const langClass = [...code.classList].find(c => c.startsWith('language-'));
+    const rawLang = langClass ? langClass.split('-')[1] || '' : '';
+    const langKey = rawLang.toLowerCase();
+
+    // Get display name
+    let displayLang = LANGUAGE_DISPLAY_MAP[langKey];
+
+    // Handle undefined special cases
+    if (!displayLang) {
+      const versionMatch = langKey.match(/^(\D+)(\d+)$/);
+      if (versionMatch) {
+        displayLang = `${versionMatch[1].charAt(0).toUpperCase()}${versionMatch[1].slice(1)} ${versionMatch[2]}`;
+      } else {
+        displayLang = langKey.charAt(0).toUpperCase() + langKey.slice(1);
+      }
     }
-  }
+
+    // Create tag
+    const tag = document.createElement('div');
+    tag.className = 'lang-tag';
+    tag.textContent = displayLang;
+    pre.appendChild(tag);
+  });
 };
 </script>
 <style scoped>

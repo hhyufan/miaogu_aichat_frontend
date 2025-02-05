@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, watch, defineEmits, computed} from 'vue';
+import {defineComponent, ref, watch,  computed} from 'vue';
 import HeadPortrait from "./HeadPortrait.vue";
 import defaultHeadImg from "@/assets/img/head_portrait.jpg";
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5

@@ -1,20 +1,18 @@
 <template>
-    <div class="head-portrait">
-        <img :src="imgUrl" alt="" />
-    </div>
+  <div class="head-portrait">
+    <img :src="imgUrl" alt="" />
+  </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script setup>
 import headPortrait from '@/assets/img/head_portrait.jpg';
 
-export default defineComponent({
-    props: {
-        imgUrl: {
-            type: String,
-            default: () => headPortrait
-        }
-    }
+// 定义 props
+defineProps({
+  imgUrl: {
+    type: String,
+    default: () => headPortrait
+  }
 });
 </script>
 

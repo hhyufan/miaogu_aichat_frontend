@@ -4,17 +4,8 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script setup>
 import Home from './views/home.vue';
-import Login from "@/views/pages/Login.vue";
-export default defineComponent({
-  name: 'App',
-  components: {
-    Login,
-    Home
-  }
-});
 </script>
 
 <style lang="scss">

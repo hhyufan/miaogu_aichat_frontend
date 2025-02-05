@@ -14,55 +14,41 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, ref } from 'vue';
+<script setup>
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import HeadPortrait from "./HeadPortrait.vue";
 import headPortrait_img from '@/assets/img/head_portrait.jpg';
 import store from "@/vuex/store.js";
 
+// Computed properties
 const userName = computed(() => !!store.state.UserName);
 const switchState = computed(() => store.state.switchState);
 
-export default defineComponent({
-  components: {
-    HeadPortrait,
-  },
-  setup() {
-    const menuRefs = ref([]); // 用于存储对 menuItem 的引用
-    const router = useRouter();
-    const menuList = ref(["icon-aichat", "icon-setting"]);
-    const imgUrl = ref(headPortrait_img);
+// Refs
+const menuRefs = ref([]);
+const router = useRouter();
+const menuList = ref(["icon-aichat", "icon-setting"]);
+const imgUrl = ref(headPortrait_img);
 
-    const changeMenu = (index) => {
-      switch (index) {
-        case 0:
-          router.push({ name: "ChatHome" });
-          break;
-        case 1:
-          router.push({ name: "Setting" });
-          break;
-        default:
-          router.push({ name: "ChatHome" });
-      }
-      // 访问对应的 block 标签
-      menuRefs.value.forEach((_, i) => {
-        const blockElement = menuRefs.value[i].querySelector('.block'); // 使用 liElement
-        blockElement.style.opacity = i === index ? '1' : '0';
-      });
-
-    };
-
-    return {
-      menuList,
-      imgUrl,
-      changeMenu,
-      userName,
-      switchState,
-      menuRefs, // 确保将 menuRefs 返回，以便在模板中使用
-    };
+// Methods
+const changeMenu = (index) => {
+  switch (index) {
+    case 0:
+      router.push({ name: "ChatHome" });
+      break;
+    case 1:
+      router.push({ name: "Setting" });
+      break;
+    default:
+      router.push({ name: "ChatHome" });
   }
-});
+  // Access corresponding block elements
+  menuRefs.value.forEach((_, i) => {
+    const blockElement = menuRefs.value[i].querySelector('.block');
+    blockElement.style.opacity = i === index ? '1' : '0';
+  });
+};
 </script>
 
 <style lang="scss" scoped>
