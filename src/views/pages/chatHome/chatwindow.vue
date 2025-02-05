@@ -2,7 +2,7 @@
   <div class="chat-window">
     <div class="switch-container">
       <div class="switch">
-        <input type="checkbox" id="toggle" v-model="switchState" @change="clickToggle"> <!-- 使用 Vuex 状态 -->
+        <input type="checkbox" id="toggle" v-model="switchState"> <!-- 使用 Vuex 状态 -->
         <label for="toggle" class="slider"></label>
       </div>
     </div>
