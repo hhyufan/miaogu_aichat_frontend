@@ -52,6 +52,7 @@ const currentIcon = computed(() => {
 // 组件挂载时获取朋友列表
 onMounted(() => {
   getFriend().then((res) => {
+    console.log(res)
     personList.value = res;
   });
 });

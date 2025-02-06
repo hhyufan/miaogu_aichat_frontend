@@ -20,14 +20,14 @@
         <div v-if="loading">加载中...</div>
         <div v-else>
           <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
-            <div class="chat-friend" v-if="item.uid !== 'User'">
+            <div class="chat-friend" v-if="item.role !== 'user'">
               <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
                 <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
                 <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
                 <span>{{friendName}}</span>
 
               </div>
-              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.msg " />
+              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
             </div>
             <div class="chat-me" v-else>
               <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
@@ -35,7 +35,7 @@
                 <span>{{userName}}</span>
                 <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
               </div>
-              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.msg " />
+              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
             </div>
           </div>
           <div class="chat-wrapper" v-if="isAITyping">
@@ -102,6 +102,7 @@ import headPortraitImg from "@/assets/img/head_portrait.jpg"; // Import default 
 import defaultHeadImg from '@/assets/icons/user-icon.svg'; // Import default avatar
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // Import avatar for GPT3_5
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg"; // Import avatar for GPT4
+import avatarDeepSeek from "@/assets/img/head_portrait3.jpg"; // Import avatar for GPT4
 import store from "@/vuex/store.js"; // Import Vuex store
 import { toast } from "@/plugins/toast.js"; // Import toast notifications
 import MarkdownViewer from "@/views/components/MarkdownViewer.vue"; // Import MarkdownViewer component
@@ -128,13 +129,15 @@ const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // Initia
 const friendName = ref(props.friendInfo.name);
 const currentTyping = ref("");
 
-// Function to get avatar based on uid
-const getAvatar = (uid) => {
-  switch (uid) {
+// Function to get avatar based on role
+const getAvatar = (role) => {
+  switch (role) {
     case '1002':
       return avatarGPT3_5; // Return GPT3_5 avatar
     case '1003':
       return avatarGPT4; // Return GPT4 avatar
+    case '1004':
+      return avatarDeepSeek;
     default:
       return headPortraitImg || defaultHeadImg; // Default avatar
   }
@@ -170,6 +173,7 @@ const getFriendChatMsg = () => {
 
   getChatMsg(params, props.friendInfo.id)
       .then((res) => {
+        console.log(JSON.stringify(res))
         chatList.value = res.data;
         nextTick(() => {
           scrollBottom();
@@ -193,14 +197,14 @@ const sendText = async () => {
 
     const chatMsg = {
       time: formattedTime,
-      msg: inputMsg.value,
-      uid: "User", // User ID
+      content: inputMsg.value,
+      role: "user", // User ID
     };
 
     const AIChatMsg = {
       time: formattedTime,
-      msg: "",
-      uid: "AI", // AI ID
+      content: "",
+      role: "assistant", // AI ID
     };
 
     chatList.value.push(chatMsg);
@@ -224,8 +228,8 @@ const sendText = async () => {
                 scrollBottom();
               });
               if (index < responseData.length) {
-                AIChatMsg.msg += responseData.charAt(index);
-                currentTyping.value = AIChatMsg.msg;
+                AIChatMsg.content += responseData.charAt(index);
+                currentTyping.value = AIChatMsg.content;
                 index++;
                 scrollBottomNotDebounce();
                 setTimeout(typeMessage, 50); // Type character by character

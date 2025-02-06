@@ -16,6 +16,7 @@ import HeadPortrait from "./HeadPortrait.vue";
 import defaultHeadImg from "@/assets/img/head_portrait.jpg";
 import avatarGPT3_5 from "@/assets/img/head_portrait1.jpg"; // 导入头像 GPT3_5
 import avatarGPT4 from "@/assets/img/head_portrait2.jpg";
+import avatarDeepSeek from "@/assets/img/head_portrait3.jpg"; // Import avatar for GPT4
 import store from "@/vuex/store.js"; // 导入头像 GPT4
 export default defineComponent({
   props: {
@@ -32,12 +33,14 @@ export default defineComponent({
     HeadPortrait,
   },
   setup(props, { emit }) {  // 这里的 emit 是通过第二个参数传入的
-    const getAvatar = (uid) => {
-      switch (uid) {
+    const getAvatar = (role) => {
+      switch (role) {
         case '1002':
           return avatarGPT3_5; // 返回 GPT3_5 的头像
         case '1003':
           return avatarGPT4; // 返回 GPT4 的头像
+        case '1004':
+          return avatarDeepSeek; // 返回 GPT4 的头像
         default:
           return defaultHeadImg; // 默认头像
       }
