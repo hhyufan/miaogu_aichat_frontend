@@ -153,7 +153,13 @@ const scrollBottom = debounce(() => {
     console.log("Scrolled to bottom");
   });
 }, 50);
-
+const scrollBottomNotDebounce = () => {
+  const scrollDom = chatContent.value;
+  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
+        console.log("Scrolled to bottom");
+      }
+  );
+}
 // Function to fetch friend's chat messages
 const getFriendChatMsg = () => {
   loading.value = true;
@@ -221,7 +227,7 @@ const sendText = async () => {
                 AIChatMsg.msg += responseData.charAt(index);
                 currentTyping.value = AIChatMsg.msg;
                 index++;
-                scrollBottom();
+                scrollBottomNotDebounce();
                 setTimeout(typeMessage, 50); // Type character by character
               } else {
                 isAITyping.value = false;
