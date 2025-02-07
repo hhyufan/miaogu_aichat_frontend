@@ -63,6 +63,7 @@ $color-text: #666;
     right: 12px;
     color: $color-text;
     font-size: 0.8em;
+    border: none; /* 去掉边框 */
     background: $color-lang-tag;
     padding: 2px 8px;
     border-radius: 4px;

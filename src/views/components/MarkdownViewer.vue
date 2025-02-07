@@ -8,6 +8,7 @@ import { marked } from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import store from "@/vuex/store.js";
+import {toast} from "@/plugins/toast.js";
 
 // Props
 const props = defineProps({
@@ -92,13 +93,29 @@ const addLanguageLabels = () => {
         displayLang = langKey.charAt(0).toUpperCase() + langKey.slice(1);
       }
     }
-
     // Create tag
-    const tag = document.createElement('div');
+    const tag = document.createElement('button');
     tag.className = 'lang-tag';
     tag.textContent = displayLang;
+    tag.addEventListener('click', () => copyToClipboard(code.textContent));
+    tag.addEventListener('mouseover', () => {
+      tag.style.backgroundColor = '#f8f7f7'; // hover 时的背景色
+    });
+
+    tag.addEventListener('mouseout', () => {
+      tag.style.backgroundColor = ''; // 恢复默认背景色
+    });
     pre.appendChild(tag);
   });
+};
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text)
+      .then(() => {
+        toast.success('内容已复制', {debounce: 3000, closable: true});
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
 };
 </script>
 
