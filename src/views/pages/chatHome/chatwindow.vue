@@ -173,7 +173,6 @@ const getFriendChatMsg = () => {
 
   getChatMsg(params, props.friendInfo.id)
       .then((res) => {
-        console.log(JSON.stringify(res))
         chatList.value = res.data;
         nextTick(() => {
           scrollBottom();
