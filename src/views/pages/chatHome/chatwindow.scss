@@ -326,17 +326,33 @@
       .inputs-colorA {
         background-color: #a78ff3;
         border: 1px solid rgb(153, 125, 236);
+        &::-webkit-scrollbar-thumb {
+          background: #997dec;
+          &:hover {
+            background: #7957ea;
+          }
+        }
       }
 
       .inputs-colorB {
         background-color: rgb(241, 201, 124);
         border: 2px solid #fdbd5e;
+        &::-webkit-scrollbar-thumb {
+          background: #eacfab;
+          &:hover {
+            background: #f4ad50;
+          }
+        }
       }
 
 
       .inputs {
         width: 90%;
-        height: 5vh;
+        height: auto;
+        overflow-y: auto;
+        resize: none;
+        min-height: 40px;
+        max-height: 200px;
         border-radius: 1vmin;
         padding: 2vh;
         box-sizing: border-box;
@@ -345,9 +361,15 @@
         color: rgba(255, 255, 255, 0.74);
         font-weight: 100;
         margin: 0 2vh;
-
         &:focus {
           outline: none;
+        }
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 3px;
         }
       }
       .send-colorA {
@@ -362,7 +384,7 @@
       }
       .send {
         width: 2.9vw;
-        height: 5vh;
+        height: auto;
         font-family: inherit;
         display: flex;
         align-items: center;

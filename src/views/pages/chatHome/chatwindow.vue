@@ -65,10 +65,14 @@
         </div>
       </div>
       <div class="chatInputs">
-        <input
+        <textarea
+            ref="textareaRef"
+            :style="{ height: textareaHeight + 'px' }"
+            @input="handleAutoResize"
+            rows="1"
             :class="[`inputs-color${switchState ? 'A' : 'B'}`,'inputs']"
             v-model="inputMsg"
-            @keyup.enter="sendText"
+            @keydown.enter="handleTextareaEnter"
         />
         <div :class="[`hover-${switchState ? 'a' : 'b'}`, `send-color${switchState ? 'A' : 'B'}`, 'send']" @click="sendText">
           <div class="svg-wrapper-1">
@@ -106,7 +110,8 @@ import avatarDeepSeek from "@/assets/img/head_portrait3.jpg"; // Import avatar f
 import store from "@/vuex/store.js"; // Import Vuex store
 import { toast } from "@/plugins/toast.js"; // Import toast notifications
 import MarkdownViewer from "@/views/components/MarkdownViewer.vue"; // Import MarkdownViewer component
-
+const textareaRef = ref(null)
+const textareaHeight = ref(40) // 初始高度
 // Define props
 const props = defineProps({
   friendInfo: {
@@ -205,9 +210,10 @@ const sendText = async () => {
       content: "",
       role: "assistant", // AI ID
     };
-
+    chatMsg.content = chatMsg.content.replaceAll("\n", "<br>")
     chatList.value.push(chatMsg);
-    inputMsg.value = ""; // Clear input
+    inputMsg.value = '' // Clear input
+    handleAutoResize()
     await nextTick(() => {
       scrollBottom();
     });
@@ -243,35 +249,53 @@ const sendText = async () => {
 
             typeMessage();
           } else {
-            toast.error("Failed to send message", { error: response.msg });
+            toast.error("发送消息失败！", { error: response.msg });
           }
         })
         .catch(error => {
           toast.error("Error sending message", { error });
         });
   } else {
-    await toast.warning("Message cannot be empty~", { closable: true, duration: 2000, debounce: 2500 });
+    await toast.warning("消息不能为空~", { closable: true, duration: 2000, debounce: 2500 });
   }
 };
+const handleAutoResize = () => {
+  nextTick(() => {
+    const textarea = textareaRef.value
+    if (!textarea) return
 
+    // 重置高度后获取滚动高度
+    textarea.style.height = 'auto'
+    const newHeight = Math.min(textarea.scrollHeight, 200) // 设置最大高度 200px
+
+    // 更新高度值
+    textareaHeight.value = newHeight > 40 ? newHeight : 40 // 最小高度 40px
+  })
+}
 // Lifecycle hook to fetch messages on mount
 onMounted(() => {
+  handleAutoResize()
   getFriendChatMsg();
 });
-
 // Watch for changes in friendInfo
 watch(() => props.friendInfo, () => {
   friendName.value = props.friendInfo.name;
   friendHeadImg.value = getAvatar(props.friendInfo.id) || defaultHeadImg; // Update avatar
   getFriendChatMsg();
 });
-
 // Handle image loading error
 const handleImageError = (item) => {
   console.error("Failed to load image for:", item);
   item.headImg = defaultHeadImg; // Set to default avatar
 };
 
+// 新增处理文本域回车事件
+const handleTextareaEnter = (event) => {
+  if (!event.shiftKey) {
+    event.preventDefault(); // 阻止默认回车换行行为
+    sendText();
+  }
+};
 </script>
 
 <style lang="scss" scoped src="./chatwindow.scss"/>
