@@ -112,6 +112,92 @@
       overflow-y: scroll;
       padding: 20px;
       box-sizing: border-box;
+      .loading-content {
+        display: flex;
+        flex-direction: column; /* 确保子元素垂直排列 */
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        .loading {
+          display: flex;
+          /* 水平显示 */
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          gap: 20px;
+          .loading-colorA {
+            box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1),
+            -15px -15px 20px rgb(205, 192, 246),
+            inset -5px -5px 5px rgba(255, 255, 255, 0.5),
+            inset 5px 5px 5px rgba(0, 0, 0, 0.05);
+          }
+          .loading-colorB {
+            box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1),
+            -15px -15px 20px rgb(220, 227, 155),
+            inset -5px -5px 5px rgba(255, 255, 255, 0.5),
+            inset 5px 5px 5px rgba(0, 0, 0, 0.05);
+          }
+          div {
+            position: relative;
+            width: 40px;
+            height: 200px;
+            /* 渐变背景 */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), #eef1f5);
+            border-radius: 20px;
+            border: 2px solid #eef1f5;
+            /* 溢出隐藏 */
+            overflow: hidden;
+            &::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              box-shadow: inset -5px -5px 5px rgba(0, 0, 0, 0.1),
+              0 420px 0 400px lightskyblue;
+              /* 执行动画：动画名称 时长 加速后减速 无限次播放 */
+              animation: animate 2s ease-in-out infinite;
+              /* 动画延迟 通过var函数获取自定义属性--x，再由calc函数计算得出每个元素的动画延迟时间 */
+              animation-delay: calc(var(--x) * -0.3s);
+              /* 初始化时先向上移动160px */
+              transform: translateY(160px);
+            }
+          }
+          /* 定义动画 */
+          @keyframes animate {
+            0% {
+              transform: translateY(160px);
+              /* hue-rotate是颜色滤镜，可以设置不同的度数来改变颜色 */
+              filter: hue-rotate(0deg);
+            }
+
+            50% {
+              transform: translateY(0px);
+              filter: hue-rotate(180deg);
+            }
+
+            100% {
+              transform: translateY(160px);
+              filter: hue-rotate(360deg);
+            }
+          }
+        }
+        .loading-textA {
+          color: #997dec;
+        }
+        .loading-textB {
+          color: #fdc674;
+        }
+        .loading-text {
+          margin-top: 20px;
+          font-size: 24px;
+          text-align: center;
+        }
+      }
 
       &::-webkit-scrollbar {
         width: 0;

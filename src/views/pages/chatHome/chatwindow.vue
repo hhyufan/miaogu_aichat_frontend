@@ -17,7 +17,19 @@
     </div>
     <div :class="[`bottom-color${switchState ? 'A' : 'B'}`, 'bottom']">
       <div class="chat-content" ref="chatContent">
-        <div v-if="loading">加载中...</div>
+        <div v-if="loading" class="loading-content">
+          <div class="loading" >
+            <div style="--x:0" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+            <div style="--x:1" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+            <div style="--x:2" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+            <div style="--x:3" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+            <div style="--x:4" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+            <div style="--x:5" :class="[`loading-color${switchState ? 'A' : 'B'}`]"></div>
+          </div>
+          <div :class="[`loading-text${switchState ? 'A' : 'B'}`, 'loading-text']">
+            <h3 >加载中......</h3>
+          </div>
+        </div>
         <div v-else>
           <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
             <div class="chat-friend" v-if="item.role !== 'user'">
