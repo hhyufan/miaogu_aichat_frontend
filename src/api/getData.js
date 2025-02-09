@@ -16,7 +16,11 @@ export const sendChatMessage = (chatMessage, Type) => {
 
 // 获取聊天信息
 export const getChatMsg = (params, Type) => {
-    return axiosInstance.post(`${baseUrl}/${Type}/messages`).then(res => res.data);
+    return axiosInstance.post(`${baseUrl}/${Type}/messages`, {}, {
+        headers: {
+            'Content-Type': 'application/json', // 设置请求头
+        }
+    }).then(res => res.data);
 };
 
 export const clearChatMsg = (params, Type) => {

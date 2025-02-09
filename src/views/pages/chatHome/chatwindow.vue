@@ -236,6 +236,7 @@ const sendText = async () => {
         .then(response => {
           if (response.code === 200) {
             isAITyping.value = true;
+            console.log(`response data: ${JSON.stringify(response)}`)
             const responseData = response.data;
             isBeforeTyping.value = false;
             let index = 0;
@@ -260,12 +261,16 @@ const sendText = async () => {
             };
 
             typeMessage();
+          } else if (response.code === 408 && props.friendInfo.id === "1004"){
+            AIChatMsg.content = "eepSeek服务器繁忙，请稍后再试！"
+            chatList.value.push(AIChatMsg);
+            toast.error("DeepSeek服务器繁忙，请稍后再试！", { error: response.msg });
           } else {
             toast.error("发送消息失败！", { error: response.msg });
           }
         })
         .catch(error => {
-          toast.error("Error sending message", { error });
+          toast.error("消息发送失败！", { error });
         });
   } else {
     await toast.warning("消息不能为空~", { closable: true, duration: 2000, debounce: 2500 });
