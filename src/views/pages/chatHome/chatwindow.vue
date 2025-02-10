@@ -112,7 +112,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick, computed } from 'vue';
 import { animation, debounce } from "@/util/util"; // Import debounce function
-import { getChatMsg, sendChatMessage } from "@/api/getData";
+import { getChatMsg, sendChatMessage, getChatMsgCount } from "@/api/getData";
 import HeadPortrait from "@/views/components/HeadPortrait.vue";
 import headPortraitImg from "@/assets/img/head_portrait.jpg"; // Import default head image
 import defaultHeadImg from '@/assets/icons/user-icon.svg'; // Import default avatar
@@ -145,7 +145,7 @@ const loading = ref(false);
 const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // Initial value for friend's avatar
 const friendName = ref(props.friendInfo.name);
 const currentTyping = ref("");
-
+const MsgCount = ref(0);
 // Function to get avatar based on role
 const getAvatar = (role) => {
   switch (role) {
@@ -187,8 +187,16 @@ const getFriendChatMsg = () => {
     friendId: props.friendInfo.id,
   };
   if (!props.friendInfo.id) return;
-
-  getChatMsg(params, props.friendInfo.id)
+  getChatMsgCount(params, props.friendInfo.id).then(
+      (res) => {
+        MsgCount.value = res.data.length
+      }
+  )
+  const messageRequest = {
+    // size: MsgCount.value,
+    // offset: (Math.floor(MsgCount.value / 5) * 5) - 5
+  }
+  getChatMsg(params, props.friendInfo.id, messageRequest)
       .then((res) => {
         chatList.value = res.data;
         nextTick(() => {
@@ -197,7 +205,7 @@ const getFriendChatMsg = () => {
       })
       .catch((error) => {
         chatList.value = "";
-        console.error('Failed to fetch chat messages:', { error });
+        console.error('Failed to fetch chat messages:', {error});
       })
       .finally(() => {
         loading.value = false;

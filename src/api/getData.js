@@ -15,14 +15,22 @@ export const sendChatMessage = (chatMessage, Type) => {
 };
 
 // 获取聊天信息
-export const getChatMsg = (params, Type) => {
-    return axiosInstance.post(`${baseUrl}/${Type}/messages`, {}, {
+export const getChatMsg = (params, Type, requestMessage = {}) => {
+    return axiosInstance.post(`${baseUrl}/${Type}/messages`, requestMessage, {
         headers: {
             'Content-Type': 'application/json', // 设置请求头
         }
     }).then(res => res.data);
 };
 
+// 获取聊天信息
+export const getChatMsgCount = (params, Type) => {
+    return axiosInstance.post(`${baseUrl}/${Type}/messages`, {}, {
+        headers: {
+            'Content-Type': 'application/json', // 设置请求头
+        }
+    }).then(res => res.data);
+};
 export const clearChatMsg = (params, Type) => {
     return axiosInstance.delete(`${baseUrl}/chat/clear`, params).then(res => res.data);
 };
