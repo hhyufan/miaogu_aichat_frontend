@@ -128,10 +128,13 @@ const rollbackChat = async () => {
 
   try {
     const response = await rollbackChatMsg();
+    console.log("???" +JSON.stringify(response))
     if (response.code === 200) {
       await toast.success("成功恢复聊天记录！", { closable: true });
+    } else if (response.code === 404){
+      await toast.warning("无历史版本！", { closable: true });
     } else {
-      await toast.error("回滚操作失败");
+      await toast.error("回滚消息失败！");
     }
   } catch (error) {
     await toast.error("回滚过程中发生错误");
