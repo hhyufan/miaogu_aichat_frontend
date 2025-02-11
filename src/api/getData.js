@@ -15,7 +15,7 @@ export const sendChatMessage = (chatMessage, Type) => {
 };
 
 // 获取聊天信息
-export const getChatMsg = (params, Type, requestMessage = {}) => {
+export const getChatMsg = (Type, requestMessage = {}) => {
     return axiosInstance.post(`${baseUrl}/${Type}/messages`, requestMessage, {
         headers: {
             'Content-Type': 'application/json', // 设置请求头
@@ -24,7 +24,7 @@ export const getChatMsg = (params, Type, requestMessage = {}) => {
 };
 
 // 获取聊天信息
-export const getChatMsgCount = (params, Type) => {
+export const getChatMsgCount = (Type) => {
     return axiosInstance.post(`${baseUrl}/${Type}/messages`, {}, {
         headers: {
             'Content-Type': 'application/json', // 设置请求头

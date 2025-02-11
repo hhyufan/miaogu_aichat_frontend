@@ -31,49 +31,51 @@
           </div>
         </div>
         <div v-else>
-          <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
-            <div class="chat-friend" v-if="item.role !== 'user'">
-              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
-                <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
-                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
-                <span>{{friendName}}</span>
+          <PullRefresh v-model="pullLoading" @refreshEnd="pullRefresh">
+            <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
+              <div class="chat-friend" v-if="item.role !== 'user'">
+                <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                  <img :src="friendHeadImg" alt="" @error="() => handleImageError(item)" />
+                  <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
+                  <span>{{friendName}}</span>
 
+                </div>
+                <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
               </div>
-              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
-            </div>
-            <div class="chat-me" v-else>
-              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
-                <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
-                <span>{{userName}}</span>
-                <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
-              </div>
-              <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
-            </div>
-          </div>
-          <div class="chat-wrapper" v-if="isAITyping">
-            <div class="chat-friend">
-              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
-                <img :src="friendHeadImg" alt=""/>
-                <span>{{friendName}}</span>
-              </div>
-              <div>
-                <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" currentTyping " />
+              <div class="chat-me" v-else>
+                <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                  <span>{{ item.time.slice(0, 19).replace("T", " ") }}</span>&nbsp;
+                  <span>{{userName}}</span>
+                  <img :src="headPortraitImg" alt="" @error="() => handleImageError(item)" />
+                </div>
+                <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" item.content " />
               </div>
             </div>
-          </div>
-          <div class="chat-wrapper" v-if="isBeforeTyping">
-            <div class="chat-friend">
-              <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
-                <img :src="friendHeadImg" alt=""/>
-                <span>{{friendName}}</span>
-              </div>
-              <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]"  >
-                <div class= 'loader' >
-                  <span class="load" :class="[`load${switchState ? 'A' : 'B'}`]"></span>
+            <div class="chat-wrapper" v-if="isAITyping">
+              <div class="chat-friend">
+                <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                  <img :src="friendHeadImg" alt=""/>
+                  <span>{{friendName}}</span>
+                </div>
+                <div>
+                  <MarkdownViewer :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]" :markdown=" currentTyping " />
                 </div>
               </div>
             </div>
-          </div>
+            <div class="chat-wrapper" v-if="isBeforeTyping">
+              <div class="chat-friend">
+                <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">
+                  <img :src="friendHeadImg" alt=""/>
+                  <span>{{friendName}}</span>
+                </div>
+                <div :class="['chat-text', `chat-text${switchState ? 'A' : 'B'}`]"  >
+                  <div class= 'loader' >
+                    <span class="load" :class="[`load${switchState ? 'A' : 'B'}`]"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </PullRefresh>
         </div>
       </div>
       <div class="chatInputs">
@@ -121,7 +123,8 @@ import avatarGPT4 from "@/assets/img/head_portrait2.jpg"; // Import avatar for G
 import avatarDeepSeek from "@/assets/img/head_portrait3.jpg"; // Import avatar for GPT4
 import store from "@/vuex/store.js"; // Import Vuex store
 import { toast } from "@/plugins/toast.js"; // Import toast notifications
-import MarkdownViewer from "@/views/components/MarkdownViewer.vue"; // Import MarkdownViewer component
+import MarkdownViewer from "@/views/components/MarkdownViewer.vue";
+import PullRefresh from "@/views/components/PullRefresh.vue"; // Import MarkdownViewer component
 const textareaRef = ref(null)
 const textareaHeight = ref(40) // 初始高度
 // Define props
@@ -142,10 +145,12 @@ const chatList = ref([]);
 const inputMsg = ref("");
 const chatContent = ref(null);
 const loading = ref(false);
+const pullLoading = ref(false);
 const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // Initial value for friend's avatar
 const friendName = ref(props.friendInfo.name);
 const currentTyping = ref("");
 const MsgCount = ref(0);
+const messageRequest = ref({})
 // Function to get avatar based on role
 const getAvatar = (role) => {
   switch (role) {
@@ -180,27 +185,46 @@ const scrollBottomNotDebounce = () => {
       }
   );
 }
+const scrollTop = debounce(() => {
+  const scrollDom = chatContent.value;
+  animation(scrollDom, 0, () => {
+    console.log("Scrolled to top");
+  });
+}, 50);
+const pullRefresh = () => {
+  setTimeout(async () => {
+    console.log("end");
+
+    messageRequest.size += 5
+    messageRequest.offset -= 5
+    messageRequest.offset = Math.max(messageRequest.offset, 0)
+    await getFriendChatMsg();
+    pullLoading.value = false;
+    loading.value = false;
+  }, 200);
+}
+
 // Function to fetch friend's chat messages
-const getFriendChatMsg = () => {
-  loading.value = true;
-  const params = {
-    friendId: props.friendInfo.id,
-  };
-  if (!props.friendInfo.id) return;
-  getChatMsgCount(params, props.friendInfo.id).then(
+const getFriendChatMsg = async () => {
+  loading.value = !pullLoading.value;
+
+  if (!props.friendInfo?.id) return;
+  await getChatMsgCount(props.friendInfo.id).then(
       (res) => {
-        MsgCount.value = res.data.length
+        MsgCount.value = res.data.length - 2
       }
   )
-  const messageRequest = {
-    // size: MsgCount.value,
-    // offset: (Math.floor(MsgCount.value / 5) * 5) - 5
-  }
-  getChatMsg(params, props.friendInfo.id, messageRequest)
+
+  await getChatMsg(props.friendInfo.id, messageRequest)
       .then((res) => {
         chatList.value = res.data;
         nextTick(() => {
-          scrollBottom();
+          if (pullLoading.value) {
+            scrollTop();
+          } else {
+            scrollBottom();
+          }
+
         });
       })
       .catch((error) => {
@@ -278,6 +302,10 @@ const sendText = async () => {
           }
         })
         .catch(error => {
+          if(error.code === "ECONNABORTED") {
+            AIChatMsg.content = "eepSeek服务器繁忙，请稍后再试！"
+            chatList.value.push(AIChatMsg);
+          }
           toast.error("消息发送失败！", { error });
         });
   } else {
@@ -301,6 +329,8 @@ const handleAutoResize = () => {
 onMounted(() => {
   handleAutoResize()
   getFriendChatMsg();
+  messageRequest.size = 5
+  messageRequest.offset = Math.floor(MsgCount.value / 5) * 5
 });
 // Watch for changes in friendInfo
 watch(() => props.friendInfo, () => {
