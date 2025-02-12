@@ -31,7 +31,7 @@
           </div>
         </div>
         <div v-else>
-          <PullRefresh v-model="pullLoading" @refreshEnd="pullRefresh">
+          <PullRefresh :chatContentRef="chatContent" v-model="pullLoading" @refreshEnd="pullRefresh">
             <div class="chat-wrapper" v-for="(item, index) in chatList" :key="index">
               <div class="chat-friend" v-if="item.role !== 'user'">
                 <div :class="['info-time', `info-time-color${switchState ? 'A' : 'B'}`]">

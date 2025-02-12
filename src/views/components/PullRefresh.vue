@@ -15,39 +15,22 @@
     <slot></slot>
   </div>
 </template>
-<script  setup>
-import { ref } from "vue";
+
+<script setup>
+import {ref} from "vue";
+import {isTop} from "@/util/util.js";
+
 const distance = ref(0);
 const startY = ref(0);
 const isTransition = ref(false);
-const isMouseDown = ref(false); // 新增鼠标按下状态
+const isMouseDown = ref(false);
+const isPullRefresh = ref(false);
 
-// 处理鼠标按下
-const handlerMouseDown = (e) => {
-  isMouseDown.value = true;
-  startY.value = e.clientY; // 使用 clientY 而非 touches
-};
-
-// 处理鼠标移动
-const handlerMouseMove = (e) => {
-  if (!isMouseDown.value) return;
-
-  const delta = e.clientY - startY.value;
-  if (delta > 0) { // 只有下拉时触发
-    distance.value = delta;
-    if (distance.value > 10) distance.value = 10;
-  }
-};
-
-// 处理鼠标释放
-const handlerMouseEnd = () => {
-  if (!isMouseDown.value) return;
-
-  isMouseDown.value = false;
-  handlerEnd(); // 复用触摸结束逻辑
-};
-
-defineProps({
+const props = defineProps({
+  chatContentRef: {
+    type: Object,
+    required: true
+  },
   modelValue: {
     type: Boolean,
     default: false
@@ -56,16 +39,38 @@ defineProps({
 
 const emits = defineEmits(["update:modelValue", "refreshEnd"]);
 
-const handlerStart = e => {
-  console.log("e", e);
-  startY.value = e.touches[0].clientY;
+// 处理鼠标按下
+const handlerMouseDown = (e) => {
+  isMouseDown.value = true;
+  startY.value = e.clientY;
 };
-const handlerMove = e => {
-  distance.value = e.touches[0].clientY - startY.value;
-  if (distance.value > 40) {
-    distance.value = 40;
+
+// 处理鼠标移动
+const handlerMouseMove = (e) => {
+  if (!isMouseDown.value) return;
+  if (window.getSelection().toString().length > 0) return;
+
+  const delta = e.clientY - startY.value;
+  if (delta > 0 && props.chatContentRef.scrollTop === 0) { // 使用传递的 chatContentRef
+    isPullRefresh.value = true;
+    distance.value = Math.min(delta, 10); // 限制最大下拉距离
+  } else {
+    isPullRefresh.value = false;
   }
 };
+
+// 处理鼠标释放
+const handlerMouseEnd = () => {
+  if (!isPullRefresh.value) return;
+  if (!isMouseDown.value) return;
+  isMouseDown.value = false;
+  handlerEnd(); // 复用触摸结束逻辑
+};
+
+const handlerStart = (e) => {
+  startY.value = e.touches[0].clientY;
+};
+
 const handlerEnd = () => {
   distance.value = 0;
   startY.value = 0;
@@ -74,6 +79,7 @@ const handlerEnd = () => {
   emits("refreshEnd");
 };
 </script>
+
 <style scoped>
 .refresh_tip {
   text-align: center;
