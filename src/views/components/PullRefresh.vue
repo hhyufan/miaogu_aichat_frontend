@@ -2,6 +2,9 @@
   <div
       :class="{'animate':isTransition}"
       :style="{transform:`translateY(${distance}px)`}"
+      @touchstart="handlerStart"
+      @touchmove="handlerMove"
+      @touchend="handlerEnd"
       @mousedown="handlerMouseDown"
       @mousemove="handlerMouseMove"
       @mouseup="handlerMouseEnd"
@@ -53,6 +56,16 @@ defineProps({
 
 const emits = defineEmits(["update:modelValue", "refreshEnd"]);
 
+const handlerStart = e => {
+  console.log("e", e);
+  startY.value = e.touches[0].clientY;
+};
+const handlerMove = e => {
+  distance.value = e.touches[0].clientY - startY.value;
+  if (distance.value > 40) {
+    distance.value = 40;
+  }
+};
 const handlerEnd = () => {
   distance.value = 0;
   startY.value = 0;
