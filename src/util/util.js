@@ -28,3 +28,13 @@ export function animation(obj, target, fn1) {
 
     animate();
 }
+
+// 判断是否在顶部
+export function isTop(obj) {
+    return obj.scrollTop === 0;
+}
+
+// 判断是否在底部
+export function isBottom(obj) {
+    return obj.scrollTop + obj.clientHeight >= obj.scrollHeight;
+}

@@ -1,4 +1,4 @@
-<template>
+ \<template>\
   <div
       :class="{'animate':isTransition}"
       :style="{transform:`translateY(${distance}px)`}"
@@ -41,6 +41,7 @@ const emits = defineEmits(["update:modelValue", "refreshEnd"]);
 
 // 处理鼠标按下
 const handlerMouseDown = (e) => {
+  if (window.getSelection().toString().length > 0) return;
   isMouseDown.value = true;
   startY.value = e.clientY;
 };
@@ -51,7 +52,7 @@ const handlerMouseMove = (e) => {
   if (window.getSelection().toString().length > 0) return;
 
   const delta = e.clientY - startY.value;
-  if (delta > 0 && props.chatContentRef.scrollTop === 0) { // 使用传递的 chatContentRef
+  if (delta > 0 && isTop(props.chatContentRef)) { // 使用传递的 chatContentRef
     isPullRefresh.value = true;
     distance.value = Math.min(delta, 10); // 限制最大下拉距离
   } else {
@@ -61,6 +62,7 @@ const handlerMouseMove = (e) => {
 
 // 处理鼠标释放
 const handlerMouseEnd = () => {
+  if (window.getSelection().toString().length > 0) return;
   if (!isPullRefresh.value) return;
   if (!isMouseDown.value) return;
   isMouseDown.value = false;
@@ -69,6 +71,19 @@ const handlerMouseEnd = () => {
 
 const handlerStart = (e) => {
   startY.value = e.touches[0].clientY;
+};
+
+const handlerMove = (e) => {
+  if (!isMouseDown.value) return;
+  if (window.getSelection().toString().length > 0) return;
+
+  const delta = e.touches[0].clientY - startY.value;
+  if (delta > 0 && isTop(props.chatContentRef)) { // 使用传递的 chatContentRef
+    isPullRefresh.value = true;
+    distance.value = Math.min(delta, 10); // 限制最大下拉距离
+  } else {
+    isPullRefresh.value = false;
+  }
 };
 
 const handlerEnd = () => {

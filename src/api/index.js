@@ -27,7 +27,7 @@ axios.interceptors.response.use(
 
 const base = {
     axios: axios,
-    baseUrl: 'https://a007-113-224-213-152.ngrok-free.app'
+    baseUrl: 'https://88f3-117-61-17-214.ngrok-free.app'
 };
 
 export default base;
