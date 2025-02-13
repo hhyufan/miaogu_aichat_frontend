@@ -1,4 +1,4 @@
- \<template>\
+ <template>
   <div
       :class="{'animate':isTransition}"
       :style="{transform:`translateY(${distance}px)`}"
