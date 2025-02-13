@@ -28,6 +28,7 @@ import Home from './views/home.vue';
 }
 
 #app {
+  user-select: none;
   width: 100vw;
   height: 100vh;
   background-color: rgb(151, 157, 167);

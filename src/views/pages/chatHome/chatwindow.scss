@@ -208,7 +208,7 @@
       .chat-wrapper {
         position: relative;
         word-break: break-all;
-
+        user-select: text;
         .info-time-colorA {
           color: #997dec;
         }
