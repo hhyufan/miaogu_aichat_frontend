@@ -12,6 +12,48 @@
   left: 50%;
 }
 
+.strength-indicator {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.strength-line-container {
+  flex: 1;
+  width: 100%; // 确保宽度
+  height: 4px;
+  border-radius: 2px;
+  margin-left: -6px;
+  .strength-line {
+    height: 100%;
+    transition: all 0.3s ease;
+
+    &-weak {
+      background-color: #ff1111;
+      width: 33%;
+    }
+
+    &-medium {
+      background-color: #ffd700;
+      width: 66%;
+    }
+
+    &-strong {
+      background-color: #00ff00;
+      width: 100%;
+    }
+  }
+}
+
+.strength-text {
+  font-size: 12px;
+  min-width: 24px;
+  text-align: right;
+
+  &-weak { color: #ff1111; }
+  &-medium { color: #ffd700; }
+  &-strong { color: #00ff00; }
+}
 .login {
   width: 90vw;
   border-radius: 15px;
