@@ -6,6 +6,7 @@ if (!isLocalhost) {
     baseUrlPromise = fetch('/api/config')
         .then(response => response.json())
         .then(({ apiUrl }) => {
+            console.log("apiUrl", apiUrl);
             baseUrl = apiUrl;
             isBaseUrlReady = true;
         })
@@ -19,5 +20,5 @@ if (!isLocalhost) {
 const base = {
     baseUrl:  baseUrl ?? 'https://5bb6-59-44-118-74.ngrok-free.app'
 };
-console.log(base.baseUrl)
+
 export default base;
