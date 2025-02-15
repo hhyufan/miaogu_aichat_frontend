@@ -9,14 +9,11 @@ export async function getBaseUrl(message) {
         try {
             const response = await fetch('/api/config');
             const { apiUrl } = await response.json();
-            store.commit('updateBaseUrl', apiUrl);
+            await store.dispatch('updateBaseUrl', apiUrl);
         } catch (error) {
             console.error('Failed to fetch config:', error);
         }
-    } else {
-        baseUrl = 'http://localhost:8088'; // 本地开发用默认值
     }
-    alert(`baseUrl${baseUrl}`);
     return baseUrl;
 }
 

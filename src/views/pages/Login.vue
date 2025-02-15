@@ -138,11 +138,15 @@ const updateVariable = (value) => {
 };
 
 const onRegister =  () => {
+  if (registerPassword.value.length === 0) {
+    registerError.value = "密码不能为空！"
+    return;
+  }
   if (registerPassword.value !== confirmPassword.value) {
     registerError.value = "密码不一致！"
     return;
   }
-  if(strengthInfo.value.text === "弱") {
+  if(passwordStrength.value < 2) {
     registerError.value = "密码强度低！"
     return;
   }
