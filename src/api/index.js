@@ -22,5 +22,4 @@ export async function getBaseUrl(message) {
 // 在应用启动时初始化 baseUrl
 export async function initBaseUrl() {
     await getBaseUrl();
-    alert("baseURL: " + store.state.baseURL);
 }
