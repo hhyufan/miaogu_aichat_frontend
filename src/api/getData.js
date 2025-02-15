@@ -1,21 +1,22 @@
 import base from './index';
-const baseUrl = base.baseUrl;
 import axiosInstance from '@/axios/axiosInstance';
 import store from "@/vuex/store.js";
 // 获取好友
-export const getFriend = () => {
-    return axiosInstance.post(`${baseUrl}/friend/friendList`).then(res =>
-    {
+export const getFriend = async () => {
+    const {baseUrl} = await base;
+    return axiosInstance.post(`${baseUrl}/friend/friendList`).then(res => {
         return res.data.data.filter(friend => friend.id !== "1001")
     });
 };
 // 发送聊天消息
-export const sendChatMessage = (chatMessage, Type) => {
+export const sendChatMessage = async (chatMessage, Type) => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/${Type}/send`, chatMessage).then(res => res.data);
 };
 
 // 获取聊天信息
-export const getChatMsg = (Type, requestMessage = {}) => {
+export const getChatMsg = async (Type, requestMessage = {}) => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/${Type}/messages`, requestMessage, {
         headers: {
             'Content-Type': 'application/json', // 设置请求头
@@ -24,28 +25,33 @@ export const getChatMsg = (Type, requestMessage = {}) => {
 };
 
 // 获取聊天信息
-export const getChatMsgCount = (Type) => {
+export const getChatMsgCount = async (Type) => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/${Type}/messages`, {}, {
         headers: {
             'Content-Type': 'application/json', // 设置请求头
         }
     }).then(res => res.data);
 };
-export const clearChatMsg = (params, Type) => {
+export const clearChatMsg = async (params) => {
+    const {baseUrl} = await base;
     return axiosInstance.delete(`${baseUrl}/chat/clear`, params).then(res => res.data);
 };
 
-export const rollbackChatMsg = (params) => {
+export const rollbackChatMsg = async (params) => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/chat/revert`, params).then(res => res.data);
 };
 
 export async function getRepoStarCount(params) {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/github/stars`, params).then(async res => {
         await store.dispatch('updateRepoStarCount', +res.data)
     });
 }
-export const login = (username, password) => {
-    return axiosInstance.post(`${baseUrl}/user/login`, {username, password},  {
+export const login = async (username, password) => {
+    const {baseUrl} = await base;
+    return axiosInstance.post(`${baseUrl}/user/login`, {username, password}, {
         headers: {
             'Content-Type': 'application/json' // 设置为 JSON
         }
@@ -60,6 +66,7 @@ export const login = (username, password) => {
 
 // 获取注册请求信息
 export const register =async (username, password, email) => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/user/register`, {username, password, email},  {
         headers: {
             'Content-Type': 'application/json' // 设置为 JSON
@@ -74,6 +81,7 @@ export const register =async (username, password, email) => {
 }
 
 export const logout = async () => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/user/logout`, null, {
         headers: {
             'Content-Type': 'application/json'
@@ -85,6 +93,7 @@ export const logout = async () => {
 }
 
 export const refreshToken = async () => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/user/refresh`, {
         username: store.state.UserName,
         refreshToken: store.state.refreshToken,
@@ -98,6 +107,7 @@ export const refreshToken = async () => {
     });
 };
 export const updateToken = async () => {
+    const {baseUrl} = await base;
     return axiosInstance.post(`${baseUrl}/user/token`).then(
         async res => {
             await store.dispatch('updateToken', res.data.data.token)

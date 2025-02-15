@@ -5,12 +5,12 @@ import {refreshToken, updateToken} from '@/api/getData'
 import {toast} from "@/plugins/toast.js";
 // 创建 Axios 实例
 const axiosInstance = axios.create({
-    baseURL: base.baseUrl, // 这里假设 baseUrl 是定义好的 API 基础 URL
+    baseURL: (await base).baseUrl, // 先解析 base，再获取 baseUrl
 });
 // 添加请求拦截器
 axiosInstance.interceptors.request.use(
     async config => {
-        const ignoredUrls = ['/user/login', '/user/register', '/user/refresh'].map( v => base.baseUrl + v);
+        const ignoredUrls = ['/user/login', '/user/register', '/user/refresh'].map( v => config.baseURL + v);
         if (ignoredUrls.includes(config.url)) {
             // 如果请求的 URL 在忽略列表中，直接返回 config
             return config;
