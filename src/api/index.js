@@ -1,26 +1,45 @@
-import {toast} from "@/plugins/toast.js";
+import axios from 'axios';
+import {config} from "@/api/get-api-url/index.js";
 
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-let baseUrl = null;
-let isBaseUrlReady = false;
-let baseUrlPromise = new Promise(_resolve => {})
-if (!isLocalhost) {
-    baseUrlPromise = fetch('/api/config')
-        .then(response => response.json())
-        .then(async ({apiUrl}) => {
-            baseUrl = apiUrl;
-            await toast.success("测试返回URL:" + baseUrl);
-            isBaseUrlReady = true;
-        })
-        .catch(console.error);
-}
-(async () =>  {
-    if (isBaseUrlReady && !isLocalhost) {
-        await baseUrlPromise;
+// 全局参数，自定义参数可在发送请求时设置
+axios.defaults.timeout = 300000000; // 超时时间ms
+axios.defaults.withCredentials = true;
+
+// 请求时的拦截
+axios.interceptors.request.use(
+    (config) => {
+        return config;
+    },
+    (error) => {
+        console.log('请求异常：' + JSON.stringify(error));
+        return Promise.reject(error);
+    }
+);
+
+axios.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        console.log('响应出错：' + error);
+        return Promise.reject(error);
+    }
+);
+let baseUrl = "";
+
+(async () => {
+    try {
+        const response = await fetch('/api/get-api-url');
+        const { apiUrl } = await response.json();
+        baseUrl = apiUrl;
+    } catch (error) {
+        console.error('Failed to fetch API URL:', error);
     }
 })()
+
 const base = {
-    baseUrl:  baseUrl ?? 'https://5bb6-59-44-118-74.ngrok-free.app'
+    axios: axios,
+    baseUrl
 };
 
 export default base;
