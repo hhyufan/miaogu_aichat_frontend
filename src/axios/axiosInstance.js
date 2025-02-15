@@ -1,33 +1,16 @@
 import axios from 'axios';
+import base from '@/api/index';
 import store from "@/vuex/store.js";
 import {refreshToken, updateToken} from '@/api/getData'
 import {toast} from "@/plugins/toast.js";
 // 创建 Axios 实例
 const axiosInstance = axios.create({
-    baseURL: "https://5bb6-59-44-118-74.ngrok-free.app",
+    baseURL: base.baseUrl, // 这里假设 baseUrl 是定义好的 API 基础 URL
 });
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-let baseUrl = null;
-let isBaseUrlReady = false;
-let baseUrlPromise = new Promise(_resolve => {})
-if (!isLocalhost) {
-     baseUrlPromise = fetch('api/get-api-url')
-        .then(response => response.json())
-        .then(({ apiUrl }) => {
-            baseUrl = apiUrl;
-            isBaseUrlReady = true;
-        })
-        .catch(console.error);
-}
-
 // 添加请求拦截器
 axiosInstance.interceptors.request.use(
     async config => {
-        if (!isBaseUrlReady && !isLocalhost) {
-            await baseUrlPromise;
-        }
-        config.baseURL = baseUrl;
-        const ignoredUrls = ['/user/login', '/user/register', '/user/refresh'].map( v => config.baseURL + v);
+        const ignoredUrls = ['/user/login', '/user/register', '/user/refresh'].map( v => base.baseUrl + v);
         if (ignoredUrls.includes(config.url)) {
             // 如果请求的 URL 在忽略列表中，直接返回 config
             return config;
