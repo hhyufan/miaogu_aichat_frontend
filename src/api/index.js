@@ -13,6 +13,8 @@ export async function getBaseUrl(message) {
         } catch (error) {
             console.error('Failed to fetch config:', error);
         }
+    } else {
+        await store.dispatch('updateBaseUrl', "http://localhost:8088");
     }
     return baseUrl;
 }
@@ -20,4 +22,5 @@ export async function getBaseUrl(message) {
 // 在应用启动时初始化 baseUrl
 export async function initBaseUrl() {
     await getBaseUrl();
+    alert("baseURL: " + store.state.baseURL);
 }

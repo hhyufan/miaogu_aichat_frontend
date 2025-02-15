@@ -10,7 +10,7 @@ const store = createStore({
         refreshToken: null,
         expiresIn: Date.now(),
         repoStarCount: 0,
-        baseURL: 'http://localhost:8088',
+        baseURL: null,
     },
     mutations: {
         setBaseUrl(state, url) {
