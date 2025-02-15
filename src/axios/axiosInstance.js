@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(async (config) => {
         config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    if (ignoredUrls.includes(config.url)) {
+    if (ignoredUrls.join(",").includes(config.url)) {
         return config;
     }
 

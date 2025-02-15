@@ -109,7 +109,6 @@ export const updateToken = async () => {
     )
 }
 const processToken = async (res) => {
-    console.log("res: " + res)
     await store.dispatch('login', res.token);
     await store.dispatch('updateRefreshToken', res.refreshToken);
     await store.dispatch('updateToken', res.token)
