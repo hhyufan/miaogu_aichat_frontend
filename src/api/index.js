@@ -19,5 +19,5 @@ if (!isLocalhost) {
 const base = {
     baseUrl:  baseUrl ?? 'https://5bb6-59-44-118-74.ngrok-free.app'
 };
-
+console.log(base.baseUrl)
 export default base;
