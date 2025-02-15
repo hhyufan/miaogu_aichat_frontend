@@ -7,6 +7,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    outDir: 'public' // 静态文件输出到 public 目录
+  },
   plugins: [
     vue(),
     vueJsx(),
