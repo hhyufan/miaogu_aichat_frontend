@@ -7,8 +7,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  publicDir: 'public',    // 静态资源目录（图片/CSS/JS等）
   build: {
-    outDir: 'public' // 静态文件输出到 public 目录
+    outDir: 'dist',       // 构建输出目录（HTML等）
+    emptyOutDir: true     // 构建前清空目录
   },
   plugins: [
     vue(),
