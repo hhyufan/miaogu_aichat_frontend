@@ -14,7 +14,7 @@ const store = createStore({
     },
     mutations: {
         setBaseUrl(state, url) {
-            state.baseUrl = url;
+            state.baseURL = url;
         },
         setUserInfo(state, value) {
             state.userInfo = value;
