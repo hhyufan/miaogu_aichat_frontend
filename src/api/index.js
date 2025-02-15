@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {config} from "@/api/get-api-url/index.js";
 
 // 全局参数，自定义参数可在发送请求时设置
 axios.defaults.timeout = 300000000; // 超时时间ms
@@ -24,10 +25,21 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+let baseUrl = "";
+
+(async () => {
+    try {
+        const response = await fetch('/api/get-api-url');
+        const { apiUrl } = await response.json();
+        baseUrl = apiUrl;
+    } catch (error) {
+        console.error('Failed to fetch API URL:', error);
+    }
+})()
 
 const base = {
     axios: axios,
-    baseUrl: 'https://88f3-117-61-17-214.ngrok-free.app'
+    baseUrl
 };
 
 export default base;
