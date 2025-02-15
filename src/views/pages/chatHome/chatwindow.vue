@@ -282,7 +282,7 @@ const sendText = async () => {
                 currentTyping.value = AIChatMsg.content;
                 index++;
                 scrollBottomNotDebounce();
-                setTimeout(typeMessage, 50); // Type character by character
+                setTimeout(typeMessage, 30); // Type character by character
               } else {
                 isAITyping.value = false;
                 chatList.value.push(AIChatMsg);
