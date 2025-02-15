@@ -138,8 +138,8 @@ const updateVariable = (value) => {
 };
 
 const onRegister =  () => {
-  if (registerPassword.value.length === 0) {
-    registerError.value = "密码不能为空！"
+  if (registerPassword.value.length === 0 || registerUsername.value.length === 0) {
+    registerError.value = "用户名或密码不能为空！"
     return;
   }
   if (registerPassword.value !== confirmPassword.value) {
@@ -172,6 +172,10 @@ const onRegister =  () => {
 }
 const formatBeijingTime = () => new Date(Date.now() + 288e5).toISOString().replace(/T|\.\d+/g, ' ');
 const onLogin = () => {
+  if (loginUsername.value.length === 0 || loginPassword.value.length === 0) {
+    registerError.value = "用户名或密码不能为空！"
+    return;
+  }
   const loginData = login(loginUsername.value, loginPassword.value)
   loginData.then(response => {
     if (response.code === 200) {
