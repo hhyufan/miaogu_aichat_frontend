@@ -1,17 +1,22 @@
-// /api/config/route.js
 import { get } from '@vercel/edge-config';
 
 export const config = { runtime: 'edge' };
 
-export async function GET() {
+export default async function handler(request) {
+    if (request.method !== 'GET') {
+        return new Response('Method Not Allowed', { status: 405 });
+    }
+
     try {
-        const apiUrl = await get('API_URL'); // 从 Edge Config 获取数据
+        const apiUrl = await get('API_URL');
         return new Response(JSON.stringify({ apiUrl }), {
             headers: { 'Content-Type': 'application/json' },
             status: 200
         });
     } catch (error) {
+        console.error('Error fetching config:', error);
         return new Response(JSON.stringify({ error: "Failed to fetch config" }), {
+            headers: { 'Content-Type': 'application/json' },
             status: 500
         });
     }
