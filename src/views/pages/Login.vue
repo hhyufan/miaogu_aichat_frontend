@@ -15,12 +15,6 @@
           <label>
             <input name="password" type="password" v-model="registerPassword" placeholder="密码" onpaste="return false;">
           </label>
-          <div v-show="registerPassword" class="strength-indicator">
-            <div class="strength-line-container">
-              <div :class="['strength-line', strengthInfo.line]"></div>
-            </div>
-            <span :class="['strength-text', strengthInfo.textColor]">{{ strengthInfo.text }}</span>
-          </div>
           <label>
             <input name="confirmPassword" type="password" v-model="confirmPassword" placeholder="确认密码" onpaste="return false;">
           </label>
@@ -77,42 +71,13 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {register, login} from '@/api/getData'
 import store from "@/vuex/store.js";
 import {toast} from "@/plugins/toast.js";
 const router = useRouter();
-// 密码强度计算
-const passwordStrength = computed(() => {
-  const password = registerPassword.value;
-  let strength = 0;
 
-  // 长度检查
-  if (password.length < 8) return strength;
-  // 大写字母检查
-  if (/[A-Z]/.test(password)) strength += 1;
-  // 小写字母检查
-  if (/[a-z]/.test(password)) strength += 1;
-  // 数字检查
-  if (/[0-9]/.test(password)) strength += 1;
-  // 特殊字符检查
-  if (/[\W_]/.test(password)) strength += 1;
-
-  return strength;
-});
-
-// 强度信息计算
-const strengthInfo = computed(() => {
-  const strength = passwordStrength.value;
-  if (strength < 2) {
-    return { line: 'strength-line-weak', text: '弱', textColor: 'strength-text-weak' };
-  } else if (strength < 4) {
-    return { line: 'strength-line-medium', text: '中', textColor: 'strength-text-medium' };
-  } else {
-    return { line: 'strength-line-strong', text: '强', textColor: 'strength-text-strong' };
-  }
-});
 // 样式表绑定
 const changedStyle = ref("changed-styleA");
 const registerBox = ref("register-box");
@@ -140,10 +105,6 @@ const updateVariable = (value) => {
 const onRegister =  () => {
   if (registerPassword.value !== confirmPassword.value) {
     registerError.value = "密码不一致！"
-    return;
-  }
-  if(strengthInfo.value.text === "弱") {
-    registerError.value = "密码强度低！"
     return;
   }
   const registerData = register(registerUsername.value, registerPassword.value, email.value)

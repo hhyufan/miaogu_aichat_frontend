@@ -3,7 +3,7 @@ import App from './App.vue';
 import ElementPlus from 'element-plus';
 import router from './router/index';
 // import './mock';
-import store from "@/vuex/store.js";
+import store from "@/vuex/store.js"; // 引入 Mock 数据
 const app = createApp(App);
 // 检查用户代理并重定向
 router.beforeEach((to, from, next) => {
