@@ -9,9 +9,13 @@ const store = createStore({
         token:  null, // 从 localStorage 获取 JWT
         refreshToken: null,
         expiresIn: Date.now(),
-        repoStarCount: 0
+        repoStarCount: 0,
+        baseURL: 'http://localhost:8088',
     },
     mutations: {
+        setBaseUrl(state, url) {
+            state.baseUrl = url;
+        },
         setUserInfo(state, value) {
             state.userInfo = value;
         },
@@ -39,6 +43,9 @@ const store = createStore({
         }
     },
     actions: {
+        updateBaseUrl({ commit }, url) {
+            commit('setBaseUrl', url);
+        },
         updateUserInfo({ commit }, value) {
             commit("setUserInfo", value);
         },

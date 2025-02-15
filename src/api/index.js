@@ -1,22 +1,26 @@
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-let baseUrl = null;
-let baseUrlPromise = Promise.resolve();
+import store from "@/vuex/store.js";
 
-if (!isLocalhost) {
-    baseUrlPromise = fetch('/api/config')
-        .then(response => response.json())
-        .then(({ apiUrl }) => {
-            baseUrl = apiUrl;
-            console.log("current ngrok url: " + baseUrl);
-        })
-        .catch(console.error);
+let baseUrl = null;
+
+export async function getBaseUrl(message) {
+    if (store.state.baseURL) return store.state.baseURL; // 缓存结果
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isLocalhost) {
+        try {
+            const response = await fetch('/api/config');
+            const { apiUrl } = await response.json();
+            store.commit('updateBaseUrl', apiUrl);
+        } catch (error) {
+            console.error('Failed to fetch config:', error);
+        }
+    } else {
+        baseUrl = 'http://localhost:8088'; // 本地开发用默认值
+    }
+    alert(`baseUrl${baseUrl}`);
+    return baseUrl;
 }
 
-const base = (async () => {
-    await baseUrlPromise;
-    return {
-        baseUrl: baseUrl ?? 'https://5bb6-59-44-118-74.ngrok-free.app' // 使用 || 确保 falsy 值触发回退
-    };
-})();
-
-export default base;
+// 在应用启动时初始化 baseUrl
+export async function initBaseUrl() {
+    await getBaseUrl();
+}
