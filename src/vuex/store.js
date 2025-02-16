@@ -11,8 +11,12 @@ const store = createStore({
         expiresIn: Date.now(),
         repoStarCount: 0,
         baseURL: null,
+        publicKey: null
     },
     mutations: {
+        setPublicKey(state, token) {
+            state.publicKey = token;
+        },
         setBaseUrl(state, url) {
             state.baseURL = url;
         },
@@ -45,6 +49,9 @@ const store = createStore({
     actions: {
         updateBaseUrl({ commit }, url) {
             commit('setBaseUrl', url);
+        },
+        updatePublicKey({ commit }, token) {
+            commit('setPublicKey', token);
         },
         updateUserInfo({ commit }, value) {
             commit("setUserInfo", value);

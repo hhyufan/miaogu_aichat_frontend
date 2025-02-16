@@ -1,5 +1,6 @@
 import axiosInstance from '@/axios/axiosInstance';
 import store from "@/vuex/store.js";
+import {encryptPassword} from "@/util/rsaEncryptor.js";
 // 获取好友
 export const getFriend = async () => {
     return axiosInstance.post(`/friend/friendList`).then(res => {
@@ -42,7 +43,7 @@ export async function getRepoStarCount(params) {
     });
 }
 export const login = async (username, password) => {
-    return axiosInstance.post(`/user/login`, {username, password}, {
+    return axiosInstance.post(`/user/login`, {username, password: encryptPassword(password, store.state.publicKey)}, {
         headers: {
             'Content-Type': 'application/json' // 设置为 JSON
         }
@@ -57,7 +58,7 @@ export const login = async (username, password) => {
 
 // 获取注册请求信息
 export const register =async (username, password, email) => {
-    return axiosInstance.post(`/user/register`, {username, password, email},  {
+    return axiosInstance.post(`/user/register`, {username, password: encryptPassword(password, store.state.publicKey), email},  {
         headers: {
             'Content-Type': 'application/json' // 设置为 JSON
         }

@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "element-plus": "^2.9.1",
     "highlight.js": "^11.11.1",
+    "jsencrypt": "^3.3.2",
     "marked": "^15.0.6",
     "miaogu-aichat": "file:",
     "mockjs": "^1.1.0",
