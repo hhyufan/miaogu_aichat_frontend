@@ -174,22 +174,16 @@ const switchState = computed({
 // Function to scroll to the bottom of chat
 const scrollBottom = debounce(() => {
   const scrollDom = chatContent.value;
-  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
-    console.log("Scrolled to bottom");
-  });
+  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {});
 }, 50);
 const scrollBottomNotDebounce = () => {
   const scrollDom = chatContent.value;
-  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {
-        console.log("Scrolled to bottom");
-      }
+  animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {}
   );
 }
 const scrollTop = debounce(() => {
   const scrollDom = chatContent.value;
-  animation(scrollDom, 0, () => {
-    console.log("Scrolled to top");
-  });
+  animation(scrollDom, 0, () => {});
 }, 50);
 const pullRefresh = () => {
   setTimeout(async () => {
@@ -268,7 +262,6 @@ const sendText = async () => {
         .then(response => {
           if (response.code === 200) {
             isAITyping.value = true;
-            console.log(`response data: ${JSON.stringify(response)}`)
             const responseData = response.data;
             isBeforeTyping.value = false;
             let index = 0;
