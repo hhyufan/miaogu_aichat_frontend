@@ -9,7 +9,8 @@ export default async function handler(request) {
 
     try {
         const apiUrl = await get('API_URL');
-        return new Response(JSON.stringify({ apiUrl }), {
+        const publicKey = await get('VUE_APP_PUBLIC_KEY');
+        return new Response(JSON.stringify({ apiUrl, publicKey }), {
             headers: { 'Content-Type': 'application/json' },
             status: 200
         });
