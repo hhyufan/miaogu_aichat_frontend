@@ -3,14 +3,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUpdated, nextTick} from 'vue';
-import { marked } from 'marked';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css';
+import {computed, onMounted, onUpdated, nextTick} from 'vue';
+import {marked} from 'marked';
+import Prism from "prismjs";
+import 'prismjs/plugins/autoloader/prism-autoloader';
+import 'prism-themes/themes/prism-one-light.css';
 import store from "@/vuex/store.js";
 import {toast} from "@/plugins/toast.js";
 
-// Props
+// 配置Autoloader路径（使用CDN示例）
+Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+
 const props = defineProps({
   markdown: {
     type: String,
@@ -18,7 +21,6 @@ const props = defineProps({
   },
 });
 
-// Computed
 const switchState = computed(() => store.state.switchState);
 
 const processedMarkdown = computed(() => {
@@ -26,7 +28,8 @@ const processedMarkdown = computed(() => {
   renderer.codespan = (code) => {
     return `<code class="custom-inline-code${switchState.value ? 'A' : 'B'}">${code.text}</code>`;
   };
-  marked.setOptions({ renderer });
+
+  marked.setOptions({renderer});
   return marked(props.markdown);
 });
 
@@ -42,8 +45,8 @@ onUpdated(() => {
 // Methods
 const highlightCode = () => {
   nextTick(() => {
-    hljs.highlightAll();
-    hljs.registerLanguage("vue", () => hljs.getLanguage("html"));
+    Prism.highlightAll();
+    Prism.languages.vue = Prism.languages.html;
     addLanguageLabels();
   });
 };
@@ -54,6 +57,7 @@ const addLanguageLabels = () => {
     xml: 'XML',
     sql: 'SQL',
     css: 'CSS',
+    cpp: 'C++',
     sass: 'Sass',
     scss: 'Sass',
     js: 'JavaScript',
@@ -93,6 +97,7 @@ const addLanguageLabels = () => {
         displayLang = langKey.charAt(0).toUpperCase() + langKey.slice(1);
       }
     }
+
     // Create tag
     const tag = document.createElement('button');
     tag.className = 'lang-tag';
@@ -108,6 +113,7 @@ const addLanguageLabels = () => {
     pre.appendChild(tag);
   });
 };
+
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
       .then(() => {

@@ -19,12 +19,15 @@
     "marked": "^15.0.6",
     "miaogu-aichat": "file:",
     "mockjs": "^1.1.0",
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.29.0",
     "qs": "^6.14.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
+    "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "sass-embedded": "^1.83.0",
