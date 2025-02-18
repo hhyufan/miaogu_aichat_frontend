@@ -287,7 +287,7 @@ const sendText = async () => {
 
             typeMessage();
           } else if (response.code === 408 && props.friendInfo.id === "1004"){
-            AIChatMsg.content = "eepSeek服务器繁忙，请稍后再试！"
+            AIChatMsg.content = "DeepSeek服务器繁忙，请稍后再试！"
             chatList.value.push(AIChatMsg);
             toast.error("DeepSeek服务器繁忙，请稍后再试！", { error: response.msg });
           } else {
