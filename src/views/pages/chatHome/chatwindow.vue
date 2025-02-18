@@ -296,7 +296,7 @@ const sendText = async () => {
         })
         .catch(error => {
           if(error.code === "ECONNABORTED") {
-            AIChatMsg.content = "eepSeek服务器繁忙，请稍后再试！"
+            AIChatMsg.content = "DeepSeek服务器繁忙，请稍后再试！"
             chatList.value.push(AIChatMsg);
           }
           toast.error("消息发送失败！", { error });
