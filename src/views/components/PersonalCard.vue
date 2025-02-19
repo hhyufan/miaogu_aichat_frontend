@@ -1,10 +1,10 @@
 <template>
-  <div class="person-card" :class="[`hover-${switchState ? 'a' : 'b'}`, {[`active-card${switchState ? 'A' : 'B'}`]: personInfo.id === current, activeCard: personInfo.id === current }]" @click="handleClick">
+  <div class="person-card" :class="[`hover-${switchState ? 'a' : 'b'}`, {[`active-card${switchState ? 'A' : 'B'}`]: personInfo['id'] === current, activeCard: personInfo['id'] === current }]" @click="handleClick">
     <div class="info">
       <HeadPortrait :imgUrl="avatarUrl" />
       <div class="info-detail">
-        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ personInfo.name }}</div>
-        <div class="detail">{{ personInfo.detail }}</div>
+        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ personInfo['name'] }}</div>
+        <div class="detail">{{ personInfo['detail'] }}</div>
       </div>
     </div>
   </div>
