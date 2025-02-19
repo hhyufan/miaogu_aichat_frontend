@@ -142,7 +142,13 @@ const userName = computed(() => store.state.UserName);
 const isBeforeTyping = ref(false);
 const isAITyping = ref(false);
 const chatList = ref([]);
-const inputMsg = ref("");
+const inputMsg = computed({
+  get: () => store.state.currentInputMsgs[props.friendInfo.id] || '',
+  set: (value) => store.commit('setCurrentInputMsg', {
+    friendId: props.friendInfo.id,
+    msg: value
+  })
+});
 const chatContent = ref(null);
 const loading = ref(false);
 const pullLoading = ref(false);

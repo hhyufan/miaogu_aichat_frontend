@@ -11,9 +11,13 @@ const store = createStore({
         expiresIn: Date.now(),
         repoStarCount: 0,
         baseURL: null,
-        publicKey: null
+        publicKey: null,
+        currentInputMsgs: {}
     },
     mutations: {
+        setCurrentInputMsg(state, { friendId, msg }) {
+            state.currentInputMsgs[friendId] = msg;
+        },
         setPublicKey(state, token) {
             state.publicKey = token;
         },
