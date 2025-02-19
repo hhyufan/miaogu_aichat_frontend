@@ -18,7 +18,6 @@
     "jsencrypt": "^3.3.2",
     "marked": "^15.0.6",
     "miaogu-aichat": "file:",
-    "mockjs": "^1.1.0",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "qs": "^6.14.0",
@@ -31,7 +30,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "sass-embedded": "^1.83.0",
-    "vite": "^6.0.5",
+    "vite": "6.0.9",
     "vite-plugin-vue-devtools": "^7.6.8"
   }
 }

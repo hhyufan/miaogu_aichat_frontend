@@ -34,7 +34,7 @@ export function isTop(obj) {
     return obj.scrollTop === 0;
 }
 
-// 判断是否在底部
-export function isBottom(obj) {
-    return obj.scrollTop + obj.clientHeight >= obj.scrollHeight;
-}
+// // 判断是否在底部
+// export function isBottom(obj) {
+//     return obj.scrollTop + obj.clientHeight >= obj.scrollHeight;
+// }

@@ -11,8 +11,8 @@
         <HeadPortrait :imgUrl="friendHeadImg" @error="handleImageError" />
       </div>
       <div class="info-detail">
-        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ friendInfo.name }}</div>
-        <div :class="[`detail-color${switchState ? 'A' : 'B'}`,'detail']">{{ friendInfo.detail }}</div>
+        <div :class="[`name-color${switchState ? 'A' : 'B'}`,'name']">{{ friendInfo['name'] }}</div>
+        <div :class="[`detail-color${switchState ? 'A' : 'B'}`,'detail']">{{ friendInfo['detail'] }}</div>
       </div>
     </div>
     <div :class="[`bottom-color${switchState ? 'A' : 'B'}`, 'bottom']">
@@ -143,17 +143,17 @@ const isBeforeTyping = ref(false);
 const isAITyping = ref(false);
 const chatList = ref([]);
 const inputMsg = computed({
-  get: () => store.state.currentInputMsgs[props.friendInfo.id] || '',
+  get: () => store.state.currentInputMsgs[props.friendInfo['id']] || '',
   set: (value) => store.commit('setCurrentInputMsg', {
-    friendId: props.friendInfo.id,
+    friendId: props.friendInfo['id'],
     msg: value
   })
 });
 const chatContent = ref(null);
 const loading = ref(false);
 const pullLoading = ref(false);
-const friendHeadImg = ref(props.friendInfo.headImg || defaultHeadImg); // Initial value for friend's avatar
-const friendName = ref(props.friendInfo.name);
+const friendHeadImg = ref(props.friendInfo['headImg'] || defaultHeadImg); // Initial value for friend's avatar
+const friendName = ref(props.friendInfo['name']);
 const currentTyping = ref("");
 const MsgCount = ref(0);
 const messageRequest = ref({})
@@ -179,16 +179,16 @@ const switchState = computed({
 
 // Function to scroll to the bottom of chat
 const scrollBottom = debounce(() => {
-  const scrollDom = chatContent.value;
+  const scrollDom = chatContent['value'];
   animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {});
 }, 50);
 const scrollBottomNotDebounce = () => {
-  const scrollDom = chatContent.value;
+  const scrollDom = chatContent['value'];
   animation(scrollDom, scrollDom.scrollHeight - scrollDom.offsetHeight, () => {}
   );
 }
 const scrollTop = debounce(() => {
-  const scrollDom = chatContent.value;
+  const scrollDom = chatContent['value'];
   animation(scrollDom, 0, () => {});
 }, 50);
 const pullRefresh = () => {
@@ -228,7 +228,7 @@ const getFriendChatMsg = async () => {
         });
       })
       .catch((error) => {
-        chatList.value = "";
+        chatList.value = null;
         console.error('Failed to fetch chat messages:', {error});
       })
       .finally(() => {
@@ -264,7 +264,7 @@ const sendText = async () => {
     isBeforeTyping.value = true;
 
     // Call sendChatMessage API
-    await sendChatMessage(chatMsg, props.friendInfo.id)
+    await sendChatMessage(chatMsg, props.friendInfo["id"])
         .then(response => {
           if (response.code === 200) {
             isAITyping.value = true;
@@ -292,12 +292,12 @@ const sendText = async () => {
             };
 
             typeMessage();
-          } else if (response.code === 408 && props.friendInfo.id === "1004"){
+          } else if (response.code === 408 && props.friendInfo['id'] === "1004"){
             AIChatMsg.content = "DeepSeek服务器繁忙，请稍后再试！"
             chatList.value.push(AIChatMsg);
-            toast.error("DeepSeek服务器繁忙，请稍后再试！", { error: response.msg });
+            toast.error("DeepSeek服务器繁忙，请稍后再试！", { error: response['msg'] });
           } else {
-            toast.error("发送消息失败！", { error: response.msg });
+            toast.error("发送消息失败！", { error: response['msg'] });
           }
         })
         .catch(error => {
@@ -313,7 +313,7 @@ const sendText = async () => {
 };
 const handleAutoResize = () => {
   nextTick(() => {
-    const textarea = textareaRef.value
+    const textarea = textareaRef['value']
     if (!textarea) return
 
     // 重置高度后获取滚动高度
@@ -333,8 +333,8 @@ onMounted(() => {
 });
 // Watch for changes in friendInfo
 watch(() => props.friendInfo, () => {
-  friendName.value = props.friendInfo.name;
-  friendHeadImg.value = getAvatar(props.friendInfo.id) || defaultHeadImg; // Update avatar
+  friendName.value = props.friendInfo['name'];
+  friendHeadImg.value = getAvatar(props.friendInfo['id']) || defaultHeadImg; // Update avatar
   getFriendChatMsg();
 });
 // Handle image loading error

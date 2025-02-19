@@ -455,7 +455,7 @@ const exit = () => {
   background-color: #ff1a1a;
 }
 
-.logout-button:hover .logout-icon {
+.logout-button:hover {
   animation: bounce 0.8s ease infinite;
 }
 
