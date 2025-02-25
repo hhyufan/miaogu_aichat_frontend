@@ -13,7 +13,7 @@ router.beforeEach((to, from, next) => {
 
     // 如果是移动设备并且访问的不是移动端页面，重定向到移动端页面
     if (isMobile && to.path !== '/mobile') {
-        window.location.href = 'https://genshin.titlecan.cn/';
+        window.location.href = 'https://app.miaogu.top';
     } else {
         next(); // 继续正常路由
     }
