@@ -11,26 +11,18 @@ export default async function handler(req: Request) {
 
         // 从URL获取路径
         const url = new URL(req.url);
-        const pathSegments = url.pathname.split('/').filter(Boolean);
 
-        // 从路径段中移除'api'
-        if (pathSegments[0] === 'api') {
-            pathSegments.shift();
-        }
+        // 移除开头的 /api/proxy 部分
+        let path = url.pathname.replace(/^\/api\/proxy\/?/, '');
 
-        // 从路径段中移除'proxy'
-        if (pathSegments[0] === 'proxy') {
-            pathSegments.shift();
-        }
-
-        // 重构目标API的路径
-        const path = pathSegments.join('/');
-        const targetUrl = `${apiUrl}/${path}${url.search}`;
+        // 构建目标URL，确保路径正确连接
+        const targetUrl = path ? `${apiUrl}/${path}${url.search}` : `${apiUrl}${url.search}`;
 
         console.log('代理到:', targetUrl);
 
         // 克隆请求头
         const headers = new Headers(req.headers);
+        headers.delete('host'); // 删除原始host头，避免可能的冲突
 
         // 将请求转发到目标API
         const response = await fetch(targetUrl, {
@@ -39,7 +31,7 @@ export default async function handler(req: Request) {
             body: req.method === 'GET' || req.method === 'HEAD' ? undefined : await req.text(),
         });
 
-        // 克隆响应
+        // 获取响应
         const responseText = await response.text();
         console.log('目标API响应:', responseText);
 
@@ -48,20 +40,35 @@ export default async function handler(req: Request) {
             const data = JSON.parse(responseText);
             return new Response(JSON.stringify(data), {
                 status: response.status,
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*', // 允许跨域访问
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
             });
         } catch (error) {
             // 如果解析失败，返回为纯文本
             return new Response(responseText, {
                 status: response.status,
-                headers: { 'Content-Type': 'text/plain' },
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
             });
         }
     } catch (error) {
         console.error('代理错误:', error);
         return new Response(JSON.stringify({ error: '内部服务器错误', message: error.message }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+            },
         });
     }
 }
