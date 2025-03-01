@@ -2,7 +2,7 @@ import store from "@/vuex/store.js";
 
 const LOCALHOST_URL = 'http://localhost:8088';
 const LOCALHOST_API_URL = `${LOCALHOST_URL}/edge-config/api/config`;
-const REMOTE_URL = 'https://miaogu.top/api/proxy'
+const REMOTE_URL = 'https://www.miaogu.top/api/proxy'
 const API_URL = '/api/config';
 
 async function fetchConfig(url) {
