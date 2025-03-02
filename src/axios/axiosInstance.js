@@ -49,10 +49,10 @@ axiosInstance.interceptors.response.use(
             // 处理未授权的情况，例如重定向到登录页面
             await toast.error("令牌过期或未授权", error.response.data.message);
             console.error(error);
-            // setTimeout(
-            //     () => window.location.href = "/",
-            //     1500
-            // )
+            setTimeout(
+                () => window.location.href = "/",
+                1500
+            )
         }
         return Promise.reject(error); // 处理其他错误
     }
