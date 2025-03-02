@@ -16,14 +16,8 @@ async function fetchConfig(url) {
 
 export async function getBaseUrl() {
     if (store.state.baseURL) return store.state.baseURL; // 缓存结果
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const url = isLocalhost ? REMOTE_URL : API_URL;
-
-    // const data = await fetchConfig(url);
-    // const apiUrl = isLocalhost ? LOCALHOST_URL : data.apiUrl;
-    const apiUrl = "https://api.miaogu.top"
-    await store.dispatch('updateBaseUrl', apiUrl);
-    return apiUrl; // 返回更新后的 baseUrl
+    await store.dispatch('updateBaseUrl', REMOTE_URL);
+    return REMOTE_URL; // 返回更新后的 baseUrl
 }
 
 export async function getPublicKey() {
