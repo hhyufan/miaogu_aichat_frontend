@@ -1,6 +1,6 @@
 import store from "@/vuex/store.js";
 
-const REMOTE_URL = 'https://api.miaogu.top';
+const REMOTE_URL = 'https://yuki.cmyam.net/miaogu_api';
 const REMOTE_API_URL = `${REMOTE_URL}/edge-config/api/config`;
 const API_URL = '/api/config';
 
