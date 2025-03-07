@@ -167,6 +167,10 @@ const onRegister =  () => {
       registerError.value = response.msg
     }
   }).catch(error => {
+    if (error.code === 'ERR_NETWORK') {
+      toast.error('网络连接错误', {error})
+      return;
+    }
     toast.error('注册时出错', {error});
   });
 }
@@ -195,6 +199,10 @@ const onLogin = () => {
   }).catch(error => {
     if(error.status === 429 && error?.response?.data){
       toast.error(error.response.data.message, {closable: true, duration: 2000, debounce: 2500})
+      return;
+    }
+    if (error.code === 'ERR_NETWORK') {
+      toast.error('网络连接错误', {error})
       return;
     }
     toast.error("登录时出错", {error})

@@ -12,7 +12,6 @@ const REMOTE_URL = requireEnv('VITE_REMOTE_URL');
 const LOCAL_HOST = requireEnv('VITE_LOCAL_HOST');
 const PUBLIC_KEY = requireEnv('VITE_PUBLIC_KEY');
 
-
 export async function getBaseUrl() {
     if (store.state.baseURL) return store.state.baseURL; // 缓存结果
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
