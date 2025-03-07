@@ -108,7 +108,8 @@
 import { computed, onMounted } from 'vue';
 import { clearChatMsg, rollbackChatMsg, getRepoStarCount, logout } from "@/api/getData.js";
 import { toast } from "@/plugins/toast.js";
-import store from "../../vuex/store.js";
+import store from "@/vuex/store.js";
+import env from '@/util/env.js';
 
 // Reactive reference for userInfo from the store
 const userInfo = computed(() => store.state.userInfo);
@@ -164,7 +165,7 @@ const clearChat = () => {
 
 // Method to open GitHub repository
 const openGithub = () => {
-  window.open('https://github.com/hhyufan/miaogu_aichat_frontend', '_blank');
+  window.open(env.GITHUB_REPOSITORY_URL, '_blank');
 };
 
 // Method for logging out
@@ -175,7 +176,7 @@ const exit = () => {
         .then(response => {
           if (response.code === 200) {
             toast.success("退出账号成功");
-            setTimeout(() => (window.location.href = "/"), 1500);
+            setTimeout(() => (window.location.href = env.APP_URL), 1500);
           }
         })
         .catch(error => {

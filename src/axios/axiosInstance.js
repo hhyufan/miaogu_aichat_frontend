@@ -2,15 +2,16 @@
 import axios from 'axios';
 import { getBaseUrl } from '@/api';
 import store from "@/vuex/store.js";
-import {refreshToken, updateToken} from '@/api/getData';
-import {toast} from "@/plugins/toast.js";
+import { refreshToken, updateToken } from '@/api/getData';
+import { toast } from "@/plugins/toast.js";
+import env from '@/util/env.js';
 
 // 创建 Axios 实例
 const axiosInstance = axios.create();
 
 // 请求拦截器
 axiosInstance.interceptors.request.use(async (config) => {
-    if(!config.baseURL) {
+    if (!config.baseURL) {
         config.baseURL = await getBaseUrl();
     }
     const ignoredUrls = ['/user/login', '/user/register', '/user/refresh'].map(v => config.baseURL + v);
@@ -50,7 +51,7 @@ axiosInstance.interceptors.response.use(
             await toast.error("令牌过期或未授权", error.response.data.message);
             console.error(error);
             setTimeout(
-                () => window.location.href = "/",
+                () => window.location.href = env.APP_URL,
                 1500
             )
         }
