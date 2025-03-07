@@ -3,6 +3,7 @@ import Home from '../views/home.vue'; // 引入 Home 组件
 import ChatHome from '../views/pages/chatHome/index.vue';
 import Setting from "@/views/pages/setting.vue";
 import Login from "@/views/pages/Login.vue"; // 引入 LoginRegister 组件
+import env from "@/util/env.js";
 
 const routes = [
   {
@@ -34,7 +35,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(env.APP_URL),
   routes,
 });
 

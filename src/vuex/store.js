@@ -1,5 +1,6 @@
 // store.js
 import { createStore } from 'vuex';
+import env from '@/util/env.js';
 
 const store = createStore({
     state: {
@@ -62,7 +63,7 @@ const store = createStore({
         },
         toLogin({ commit }) {
             commit('setToken', null);
-            window.location.href = '/';
+            window.location.href = env.APP_URL;
         },
         updateUserName({ commit }, value) {
             commit('setUserName', value);
