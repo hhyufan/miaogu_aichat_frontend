@@ -3,20 +3,18 @@
     {
       "src": "/miaogu/pc/(.*)",
       "dest": "/dist/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/miaogu/pc/"
     },
     {
-      "source": "/miaogu/mobile",
-      "destination": "https://app.miaogu.top"
+      "src": "/",
+      "dest": "/miaogu/pc/"
     },
     {
-      "source": "/miaogu/api/(.*)",
-      "destination": "https://yuki.cmyam.net/miaogu/api/$1"
+      "src": "/miaogu/mobile",
+      "dest": "https://app.miaogu.top"
+    },
+    {
+      "src": "/miaogu/api/(.*)",
+      "dest": "https://yuki.cmyam.net/miaogu/api/$1"
     }
   ]
 }
