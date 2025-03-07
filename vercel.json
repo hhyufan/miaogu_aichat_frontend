@@ -1,12 +1,22 @@
 {
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/miaogu/pc/(.*)",
+      "dest": "/dist/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/miaogu/pc/"
     },
     {
-      "src": "/(.*)",
-      "dest": "/dist/$1"
+      "source": "/miaogu/mobile",
+      "destination": "https://app.miaogu.top"
+    },
+    {
+      "source": "/miaogu/api/(.*)",
+      "destination": "https://yuki.cmyam.net/miaogu/api/$1"
     }
   ]
 }
