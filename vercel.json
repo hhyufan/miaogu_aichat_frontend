@@ -1,22 +1,9 @@
 {
+  "buildCommand": "npm run build -- --mode production.vercel",
   "routes": [
     {
-      "src": "/miaogu/pc/(.*)",
+      "src": "/(.*)",
       "dest": "/dist/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/miaogu/pc/"
-    },
-    {
-      "source": "/miaogu/mobile",
-      "destination": "https://app.miaogu.top"
-    },
-    {
-      "source": "/miaogu/api/(.*)",
-      "destination": "https://yuki.cmyam.net/miaogu/api/$1"
     }
   ]
 }
