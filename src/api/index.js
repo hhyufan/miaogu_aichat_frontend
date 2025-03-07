@@ -12,15 +12,6 @@ const REMOTE_URL = requireEnv('VITE_REMOTE_URL');
 const LOCAL_HOST = requireEnv('VITE_LOCAL_HOST');
 const PUBLIC_KEY = requireEnv('VITE_PUBLIC_KEY');
 
-async function fetchConfig(url) {
-    try {
-        const response = await fetch(url);
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to fetch config:', error);
-        throw error; // 重新抛出错误以便调用者处理
-    }
-}
 
 export async function getBaseUrl() {
     if (store.state.baseURL) return store.state.baseURL; // 缓存结果
