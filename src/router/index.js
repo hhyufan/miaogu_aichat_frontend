@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/home.vue'; // 引入 Home 组件
 import ChatHome from '../views/pages/chatHome/index.vue';
 import Setting from "@/views/pages/setting.vue";
@@ -35,7 +35,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(env.APP_URL),
+  history: createWebHashHistory(env.APP_URL),
   routes,
 });
 
