@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import HeadPortrait from "./HeadPortrait.vue";
 import headPortrait_img from '@/assets/img/head_portrait.jpg';
@@ -24,19 +24,23 @@ import store from "@/vuex/store.js";
 // Computed properties
 const userName = computed(() => !!store.state.UserName);
 const switchState = computed(() => store.state.switchState);
-const menuState =  computed(() => store.state.menuState);
+const menuState = computed(() => store.state.menuState);
 // Refs
 const menuRefs = ref([]);
 const router = useRouter();
 const menuList = ref(["icon-aichat", "icon-setting"]);
 const imgUrl = ref(headPortrait_img);
 
-onMounted(() => {
+onMounted(() => updateBlockElement(menuState.value));
+
+watch(menuState, () => updateBlockElement(menuState.value), { immediate: true });
+
+function updateBlockElement(value) {
   menuRefs.value.forEach((_, i) => {
     const blockElement = menuRefs.value[i].querySelector('.block');
-    blockElement.style.opacity = i === +menuState.value ? '1' : '0';
+    blockElement.style.opacity = i === value ? '1' : '0';
   });
-});
+}
 
 // Methods
 const changeMenu = (index) => {
@@ -53,13 +57,7 @@ const changeMenu = (index) => {
       store.dispatch('updateMenuState', 0);
       router.push({ name: "ChatHome" });
   }
-  console.log("menuState： " + menuState.value)
-  // Access corresponding block elements
-  menuRefs.value.forEach((_, i) => {
-    const blockElement = menuRefs.value[i].querySelector('.block');
-    blockElement.style.opacity = i === +menuState.value ? '1' : '0';
-  });
 };
 </script>
 
-<style lang="scss" scoped src="./nav.scss"/>
+<style lang="scss" scoped src="./nav.scss" />
