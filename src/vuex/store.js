@@ -1,7 +1,7 @@
 // store.js
 import { createStore } from 'vuex';
 import env from '@/util/env.js';
-
+import createPersistedState from 'vuex-persistedstate'; // 新增
 const store = createStore({
     state: {
         UserName: false,
@@ -89,7 +89,29 @@ const store = createStore({
     },
     getters: {
         isAuthenticated: state => !!state.token, // 判断用户是否已认证
-    }
+    },
+    plugins: [
+        // 新增插件配置
+        createPersistedState({
+            key: 'my-app-storage', // 自定义存储 key
+            paths: [
+                'token',
+                'refreshToken',
+                'expiresIn',
+                'userInfo',
+                'UserName',
+                'publicKey',
+                'repoStarCount'
+            ],
+            storage: window.localStorage,
+
+            // 安全过滤（可选）
+            reducer: (state) => {
+                const { currentInputMsgs, baseURL, ...persistedState } = state;
+                return persistedState;
+            }
+        })
+    ]
 });
 
 export default store;
