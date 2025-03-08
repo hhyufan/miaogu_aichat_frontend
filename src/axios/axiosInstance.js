@@ -51,7 +51,13 @@ axiosInstance.interceptors.response.use(
             await toast.error("令牌过期或未授权", error.response.data.message);
             console.error(error);
             setTimeout(
-                () => window.location.href = env.APP_URL,
+                () => {
+                    // 重置 store 状态
+                    store.commit('resetState');
+                    // 清除 localStorage 中的持久化数据
+                    localStorage.removeItem('my-app-storage'); // 与 vuex-persistedstate 的 key 一致
+                    window.location.href = env.APP_URL
+                },
                 1500
             )
         }
