@@ -9,6 +9,7 @@ function getDefaultState() {
         UserName: false,
         userInfo: {},
         switchState: false,
+        menuState: 0,
         token: null,
         refreshToken: null,
         expiresIn: Date.now(), // 重置时会更新为当前时间
@@ -24,6 +25,7 @@ const store = createStore({
         UserName: false,
         userInfo: {},
         switchState: false,
+        menuState: 0,
         token:  null, // 从 localStorage 获取 JWT
         refreshToken: null,
         expiresIn: Date.now(),
@@ -38,6 +40,9 @@ const store = createStore({
         },
         setPublicKey(state, token) {
             state.publicKey = token;
+        },
+        setMenuState(state, menuState) {
+            state.menuState = menuState;
         },
         setBaseUrl(state, url) {
             state.baseURL = url;
@@ -109,6 +114,9 @@ const store = createStore({
         updateRepoStarCount({ commit }, repoStarCount) {
             commit('setRepoStarCount', repoStarCount)
         },
+        updateMenuState({commit}, menuState) {
+            commit('setMenuState', menuState)
+        }
     },
     getters: {
         isAuthenticated: state => !!state.token, // 判断用户是否已认证
@@ -121,6 +129,7 @@ const store = createStore({
                 'token',
                 'refreshToken',
                 'expiresIn',
+                'menuState',
                 'userInfo',
                 'UserName',
                 'publicKey',
