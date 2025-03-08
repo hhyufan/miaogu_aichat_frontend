@@ -1,7 +1,24 @@
 // store.js
 import { createStore } from 'vuex';
 import env from '@/util/env.js';
-import createPersistedState from 'vuex-persistedstate'; // 新增
+import createPersistedState from 'vuex-persistedstate';
+// import router from "@/router/index.js"; // 新增
+
+function getDefaultState() {
+    return {
+        UserName: false,
+        userInfo: {},
+        switchState: false,
+        token: null,
+        refreshToken: null,
+        expiresIn: Date.now(), // 重置时会更新为当前时间
+        repoStarCount: 0,
+        baseURL: null,
+        publicKey: null,
+        currentInputMsgs: {}
+    };
+}
+
 const store = createStore({
     state: {
         UserName: false,
@@ -49,6 +66,12 @@ const store = createStore({
         },
         setRepoStarCount(state, repoStarCount) {
             state.repoStarCount = repoStarCount
+        },
+        resetState(state) {
+            const defaultState = getDefaultState();
+            Object.keys(defaultState).forEach(key => {
+                state[key] = defaultState[key];
+            });
         }
     },
     actions: {
@@ -85,7 +108,7 @@ const store = createStore({
         },
         updateRepoStarCount({ commit }, repoStarCount) {
             commit('setRepoStarCount', repoStarCount)
-        }
+        },
     },
     getters: {
         isAuthenticated: state => !!state.token, // 判断用户是否已认证

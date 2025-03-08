@@ -176,7 +176,14 @@ const exit = () => {
         .then(response => {
           if (response.code === 200) {
             toast.success("退出账号成功");
-            setTimeout(() => (window.location.href = env.APP_URL), 1500);
+            setTimeout(() => {
+              // 重置 store 状态
+              store.commit('resetState');
+              // 清除 localStorage 中的持久化数据
+              localStorage.removeItem('my-app-storage'); // 与 vuex-persistedstate 的 key 一致
+              window.location.href = env.APP_URL
+
+            }, 1500);
           }
         })
         .catch(error => {
