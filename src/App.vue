@@ -25,6 +25,7 @@ import Home from './views/home.vue';
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 #app {
@@ -32,6 +33,9 @@ import Home from './views/home.vue';
   width: 100vw;
   height: 100vh;
   background-color: rgb(151, 157, 167);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .global-toast-container {
   position: fixed;
@@ -48,17 +52,13 @@ import Home from './views/home.vue';
   background: #fff;
   box-shadow: 0 3px 12px rgba(0,0,0,0.15);
   margin-bottom: 10px;
-  pointer-events: auto;
-  animation: toastSlideIn 0.3s ease;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s, transform 0.3s;
 }
 
-@keyframes toastSlideIn {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.toast-item.show {
+  opacity: 1;
+  transform: translateY(0);
 }
-
-.toast-error { background: #ef4444; color: white; }
-.toast-success { background: #10b981; color: white; }
-.toast-warning { background: #f59e0b; color: white; }
-
 </style>

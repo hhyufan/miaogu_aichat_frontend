@@ -3,6 +3,7 @@
 
   .chatLeft {
     width: 280px;
+    padding-right: 10px;
 
     .title-colorA {
       color: #8a6dea;
@@ -26,8 +27,9 @@
         height: 65vh;
         margin-top: 20px;
         overflow: hidden;
-        overflow-y: scroll;
+        overflow-y: auto;
         box-sizing: border-box;
+        scrollbar-width: none; /* Firefox */
 
         &::-webkit-scrollbar {
           width: 0;
@@ -46,8 +48,8 @@
     margin-top: 20px;
     flex: 1;
     max-width: 96%;
-
-
+    padding-left: 15px;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
 
     .showIcon {
       position: relative;
@@ -66,6 +68,25 @@
         height: 300px;
         font-size: 300px;
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chatHome {
+    flex-direction: column;
+    
+    .chatLeft {
+      width: 100%;
+      padding-right: 0;
+    }
+    
+    .chatRight {
+      margin-top: 30px;
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding-top: 15px;
     }
   }
 }

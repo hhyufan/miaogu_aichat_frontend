@@ -56,3 +56,35 @@
     margin-left: 25px;
   }
 }
+
+@media (max-width: 768px) {
+  .nav {
+    height: auto;
+    border-radius: 10px 0 0 10px;
+    
+    .nav-menu-wrapper {
+      position: relative;
+      top: auto;
+      transform: none;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      
+      .menu-list {
+        display: flex;
+        margin-left: 0;
+        
+        li {
+          margin: 0 15px;
+        }
+      }
+    }
+    
+    .own-pic {
+      position: relative;
+      margin: 10px auto;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
